@@ -72,35 +72,32 @@ Four delivery surfaces, one shared risk model, one Birdeye client, one shared in
 
 ```mermaid
 flowchart LR
-    %% Sources
-    B["fa:fa-cloud Birdeye Data API<br/>8 endpoints · 60 rpm free"]:::external
+    B[Birdeye Data API<br/>8 endpoints, 60 rpm free]:::external
 
-    %% Ingestion
-    subgraph INGEST["Ingestion Layer (server-only)"]
+    subgraph INGEST[Ingestion Layer - server only]
       direction TB
-      BC["packages/birdeye<br/>typed client · rate-limit · retry"]:::pkg
-      EN["enrichToken()<br/>Promise.allSettled<br/>premium-gate tolerant"]:::pkg
-      SC["packages/scoring<br/>7 signal calculators<br/>TrapScore + explain"]:::pkg
+      BC[packages/birdeye<br/>typed client, rate-limit, retry]:::pkg
+      EN[enrichToken<br/>Promise.allSettled<br/>premium-gate tolerant]:::pkg
+      SC[packages/scoring<br/>7 signal calculators<br/>TrapScore + explain]:::pkg
     end
 
-    %% Storage
-    DB[("packages/db<br/>FomoDb interface<br/>in-memory · supabase-ready")]:::db
+    DB[(packages/db<br/>FomoDb interface<br/>in-memory, supabase-ready)]:::db
 
-    %% Surfaces
-    subgraph SURFACES["Delivery Surfaces"]
+    subgraph SURFACES[Delivery Surfaces]
       direction TB
-      WEB["apps/web<br/>Next.js 15<br/>5 pages · 9 API routes"]:::app
-      WORKER["apps/worker<br/>fetch → enrich → score → alert"]:::app
-      BOT["apps/bot<br/>Telegram alerts"]:::app
-      EXT["apps/extension<br/>MV3 popup + content script"]:::app
+      WEB[apps/web<br/>Next.js 15<br/>5 pages, 9 API routes]:::app
+      WORKER[apps/worker<br/>fetch enrich score alert]:::app
+      BOT[apps/bot<br/>Telegram alerts]:::app
+      EXT[apps/extension<br/>MV3 popup + content script]:::app
     end
 
-    USR(["fa:fa-user User"]):::user
+    USR([User]):::user
 
-    %% Edges
-    B -->|"X-API-KEY<br/>X-Chain: solana"| BC
-    BC --> EN --> SC --> DB
-    WORKER -.cron.-> BC
+    B -->|X-API-KEY<br/>X-Chain solana| BC
+    BC --> EN
+    EN --> SC
+    SC --> DB
+    WORKER -. cron .-> BC
     DB --> WEB
     DB --> BOT
     DB --> EXT
@@ -108,7 +105,6 @@ flowchart LR
     USR --> BOT
     USR --> EXT
 
-    %% styles
     classDef external fill:#0F1A14,stroke:#10B981,color:#E8F5E9
     classDef pkg      fill:#152119,stroke:#84CC16,color:#E8F5E9
     classDef db       fill:#1F2D24,stroke:#34D399,color:#E8F5E9
@@ -128,29 +124,29 @@ What happens when a user pastes a Solana mint into the Cmd-K spotlight:
 sequenceDiagram
     autonumber
     participant U as User
-    participant N as Next.js (RSC + /api)
+    participant N as Next.js RSC + api
     participant SS as score-service.ts
     participant LI as live-ingestion.ts
     participant BD as Birdeye API
     participant DB as in-memory FomoDb
     participant T as sonner toast
 
-    U->>N: ⌘K → paste mint → Enter
+    U->>N: Cmd-K, paste mint, Enter
     N->>SS: getTokenScore(mint)
     SS->>DB: getLatestScore(mint)
-    alt cached < 60s old
+    alt cached under 60s old
         DB-->>SS: StoredScoreRow
     else stale or missing
-        SS->>LI: ensureSeeded() / refresh
-        LI->>BD: trending + overview + txs + holders<br/>(throttled 0.9 rps · token-bucket)
-        BD-->>LI: 6× endpoints (allSettled)
-        LI->>LI: buildTrapInputs → calculateTrapScore
-        LI->>DB: upsertToken · insertSnapshot · insertScore · insertAlertIfNew
+        SS->>LI: ensureSeeded / refresh
+        LI->>BD: trending + overview + txs + holders<br/>throttled 0.9 rps token-bucket
+        BD-->>LI: 6x endpoints allSettled
+        LI->>LI: buildTrapInputs then calculateTrapScore
+        LI->>DB: upsertToken, insertSnapshot, insertScore, insertAlertIfNew
         DB-->>SS: fresh StoredScoreRow
     end
     SS-->>N: TokenRiskRow + reasons + evidence
-    N-->>U: /case-file/[mint] renders<br/>(NumberTicker, OrbitingCircles, BorderBeam)
-    N-->>T: toast.success("Live data")
+    N-->>U: /case-file/mint renders<br/>NumberTicker OrbitingCircles BorderBeam
+    N-->>T: toast success Live data
 ```
 
 Every step above is a real production code path — no mocking, no stubbed fetches. The ingestion runs **inside** the Next.js process so the in-memory DB is shared with all `/api/*` routes (no IPC needed for the dev demo; swap to Supabase for prod without changing surface code).
@@ -163,21 +159,27 @@ TrapScore = clamped sum of seven independent contributions, each capped per the 
 
 ```mermaid
 flowchart TB
-    SS["Smart Money Divergence<br/>cap 25"]:::s1
-    IE["Insider Exit Pressure<br/>cap 18"]:::s2
-    LF["Liquidity Fragility<br/>cap 18"]:::s3
-    SP["Sell Pressure While Green<br/>cap 12"]:::s4
-    HC["Holder Concentration Risk<br/>cap 12"]:::s5
-    SE["Static Token Risk<br/>cap 10"]:::s6
-    VL["Abnormal Vol/Liq Ratio<br/>cap 5"]:::s7
+    SS[Smart Money Divergence<br/>cap 25]:::s1
+    IE[Insider Exit Pressure<br/>cap 18]:::s2
+    LF[Liquidity Fragility<br/>cap 18]:::s3
+    SP[Sell Pressure While Green<br/>cap 12]:::s4
+    HC[Holder Concentration Risk<br/>cap 12]:::s5
+    SE[Static Token Risk<br/>cap 10]:::s6
+    VL[Abnormal Vol Liq Ratio<br/>cap 5]:::s7
 
-    SS & IE & LF & SP & HC & SE & VL --> SUM(("Σ clamp 0–100"))
-    SUM --> V{"verdict band"}
+    SS --> SUM((Sum<br/>clamp 0-100))
+    IE --> SUM
+    LF --> SUM
+    SP --> SUM
+    HC --> SUM
+    SE --> SUM
+    VL --> SUM
+    SUM --> V{verdict<br/>band}
 
-    V -->|"81–100"| CR["🔴 Critical Trap"]:::cr
-    V -->|"61–80"|  EW["🟠 Exit Warning"]:::ew
-    V -->|"31–60"|  RC["🟡 Risky Chase"]:::rc
-    V -->|"0–30"|   CP["🟢 Clean Pump"]:::cp
+    V -->|81 to 100| CR[Critical Trap]:::cr
+    V -->|61 to 80| EW[Exit Warning]:::ew
+    V -->|31 to 60| RC[Risky Chase]:::rc
+    V -->|0 to 30| CP[Clean Pump]:::cp
 
     classDef s1 fill:#7F1D1D,stroke:#EF4444,color:#fff
     classDef s2 fill:#92400E,stroke:#F97316,color:#fff
@@ -358,7 +360,8 @@ Concrete, file-level enforcement — not just convention:
 - 🟢 **Premium gating** handled gracefully — `/defi/token_security` 401s become warnings, snapshot still builds
 - 🟢 **Rate limit respected** — token bucket strictly capped at 0.9 rps (54 rpm) on the 60 rpm free tier
 - 🟡 **In-memory DB** — no persistence across web restarts yet; Supabase impl is the next adapter
-- 🟡 **Telegram bot + extension** scaffolded but not yet load-tested end-to-end against the live API
+- 🟡 **Telegram bot** — source complete (11 files, `/score`, `/watch`, `/recent`, dispatch + format tests, typecheck passes). To bring online: `pnpm --filter @fomo/bot add grammy` (one-time) + paste your bot token into `TELEGRAM_BOT_TOKEN` in `.env` + `pnpm --filter @fomo/bot dev`
+- 🟡 **Browser extension** — Manifest V3 build in `apps/extension/dist/` loads via `chrome://extensions` (Developer Mode), popup + content-script work against the local API; not yet load-tested against the live `/api/extension/block` endpoint
 
 ---
 
