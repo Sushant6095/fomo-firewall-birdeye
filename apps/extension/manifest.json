@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "FOMO Firewall",
+  "short_name": "FOMO Firewall",
+  "version": "0.1.0",
+  "description": "Check Solana token pumps for exit-liquidity risk. TrapScore reveals when smart wallets, insiders, or top holders are using retail as exit liquidity.",
+  "permissions": ["activeTab", "storage"],
+  "host_permissions": [
+    "https://birdeye.so/*",
+    "https://dexscreener.com/*",
+    "https://www.dextools.io/*",
+    "https://solscan.io/*",
+    "https://pump.fun/*",
+    "https://jup.ag/*",
+    "http://localhost:3000/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "FOMO Firewall — TrapScore"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://birdeye.so/*",
+        "https://dexscreener.com/*",
+        "https://www.dextools.io/*",
+        "https://solscan.io/*",
+        "https://pump.fun/*",
+        "https://jup.ag/*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["styles.css"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

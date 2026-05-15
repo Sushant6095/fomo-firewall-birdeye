@@ -1,0 +1,21 @@
+{
+  "name": "@fomo/bot",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "test": "tsx src/__tests__/run.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fomo/db": "workspace:*",
+    "@fomo/scoring": "workspace:*",
+    "@fomo/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}

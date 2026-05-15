@@ -1,0 +1,421 @@
+/* FOMO Firewall extension styles
+ * Shared between popup and content-script injected badge.
+ * Mirrors the dashboard verdict palette so the visual language stays consistent. */
+
+:root {
+  --ff-bg: hsl(222 47% 5%);
+  --ff-card: hsl(222 36% 8%);
+  --ff-border: hsl(220 18% 18%);
+  --ff-text: hsl(210 20% 92%);
+  --ff-muted: hsl(215 16% 60%);
+  --ff-primary: hsl(28 100% 56%);
+  --ff-clean: hsl(142 70% 48%);
+  --ff-risky: hsl(42 95% 56%);
+  --ff-warning: hsl(24 95% 55%);
+  --ff-critical: hsl(0 84% 60%);
+}
+
+/* ---------- Popup ---------- */
+
+.ff-body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  background: var(--ff-bg);
+  color: var(--ff-text);
+  width: 360px;
+}
+
+.ff-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  width: 360px;
+}
+
+.ff-popup__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ff-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ff-logo__mark {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: hsl(28 100% 56% / 0.12);
+  border: 1px solid hsl(28 100% 56% / 0.4);
+  font-size: 14px;
+}
+
+.ff-logo__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.ff-logo__text strong {
+  font-size: 13px;
+  letter-spacing: -0.01em;
+}
+
+.ff-logo__text small {
+  color: var(--ff-muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-top: 3px;
+}
+
+.ff-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ff-form__label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ff-muted);
+}
+
+.ff-form__row {
+  display: flex;
+  gap: 6px;
+}
+
+.ff-form__input {
+  flex: 1;
+  background: var(--ff-card);
+  border: 1px solid var(--ff-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: var(--ff-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  outline: none;
+}
+
+.ff-form__input:focus {
+  border-color: hsl(28 100% 56% / 0.6);
+}
+
+.ff-form__submit {
+  background: hsl(28 100% 56% / 0.15);
+  color: var(--ff-primary);
+  border: 1px solid hsl(28 100% 56% / 0.4);
+  border-radius: 8px;
+  padding: 0 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.ff-form__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ff-form__hint {
+  margin: 0;
+  color: var(--ff-muted);
+  font-size: 10px;
+}
+
+.ff-form__error {
+  margin: 0;
+  color: var(--ff-critical);
+  font-size: 11px;
+}
+
+.ff-card {
+  border: 1px solid var(--ff-border);
+  background: var(--ff-card);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ff-card.ff-tone-critical {
+  border-color: hsl(0 84% 60% / 0.45);
+  box-shadow: 0 0 0 1px hsl(0 84% 60% / 0.15), 0 0 24px -6px hsl(0 84% 60% / 0.25);
+}
+.ff-card.ff-tone-warning {
+  border-color: hsl(24 95% 55% / 0.4);
+}
+.ff-card.ff-tone-risky {
+  border-color: hsl(42 95% 56% / 0.35);
+}
+.ff-card.ff-tone-clean {
+  border-color: hsl(142 70% 48% / 0.35);
+}
+
+.ff-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ff-card__symbol strong {
+  font-size: 14px;
+}
+
+.ff-card__symbol small {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  color: var(--ff-muted);
+  margin-top: 2px;
+}
+
+.ff-badge {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  background: hsl(220 18% 18% / 0.4);
+}
+
+.ff-tone-critical .ff-badge {
+  color: var(--ff-critical);
+  background: hsl(0 84% 60% / 0.1);
+}
+.ff-tone-warning .ff-badge {
+  color: var(--ff-warning);
+  background: hsl(24 95% 55% / 0.1);
+}
+.ff-tone-risky .ff-badge {
+  color: var(--ff-risky);
+  background: hsl(42 95% 56% / 0.1);
+}
+.ff-tone-clean .ff-badge {
+  color: var(--ff-clean);
+  background: hsl(142 70% 48% / 0.1);
+}
+
+.ff-card__score {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.ff-card__num {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.ff-card__num-suffix {
+  font-size: 10px;
+  color: var(--ff-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.ff-card__reasons {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ff-card__reasons li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--ff-text);
+}
+
+.ff-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-top: 6px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.ff-tone-critical .ff-dot {
+  background: var(--ff-critical);
+}
+.ff-tone-warning .ff-dot {
+  background: var(--ff-warning);
+}
+.ff-tone-risky .ff-dot {
+  background: var(--ff-risky);
+}
+.ff-tone-clean .ff-dot {
+  background: var(--ff-clean);
+}
+
+.ff-card__footer {
+  display: flex;
+  gap: 6px;
+}
+
+.ff-btn {
+  flex: 1;
+  text-align: center;
+  border: 1px solid var(--ff-border);
+  background: hsl(220 18% 18% / 0.5);
+  color: var(--ff-text);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.ff-btn--primary {
+  background: hsl(28 100% 56% / 0.12);
+  border-color: hsl(28 100% 56% / 0.4);
+  color: var(--ff-primary);
+}
+
+.ff-demo-note {
+  margin: 0;
+  font-size: 10px;
+  color: var(--ff-muted);
+  text-align: center;
+}
+
+/* ---------- Content-script badge ---------- */
+
+#ff-badge-root {
+  position: fixed;
+  z-index: 2147483646;
+  right: 16px;
+  bottom: 16px;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+.ff-bdg {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: hsl(222 36% 8% / 0.96);
+  color: hsl(210 20% 92%);
+  border: 1px solid hsl(220 18% 18%);
+  border-radius: 999px;
+  padding: 6px 10px 6px 6px;
+  font-size: 12px;
+  line-height: 1;
+  box-shadow: 0 6px 20px -6px hsl(0 0% 0% / 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.ff-bdg--critical {
+  border-color: hsl(0 84% 60% / 0.45);
+  box-shadow: 0 0 0 1px hsl(0 84% 60% / 0.15),
+    0 6px 24px -6px hsl(0 84% 60% / 0.35);
+}
+.ff-bdg--warning {
+  border-color: hsl(24 95% 55% / 0.45);
+}
+.ff-bdg--risky {
+  border-color: hsl(42 95% 56% / 0.45);
+}
+.ff-bdg--clean {
+  border-color: hsl(142 70% 48% / 0.45);
+}
+.ff-bdg--loading {
+  border-color: hsl(220 18% 18%);
+}
+.ff-bdg--error {
+  border-color: hsl(220 18% 18%);
+  color: hsl(215 16% 60%);
+}
+
+.ff-bdg__brand {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: hsl(28 100% 56% / 0.15);
+  color: hsl(28 100% 56%);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.ff-bdg__score {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.ff-bdg__verdict {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: hsl(215 16% 70%);
+}
+
+.ff-bdg--critical .ff-bdg__verdict {
+  color: hsl(0 84% 60%);
+}
+.ff-bdg--warning .ff-bdg__verdict {
+  color: hsl(24 95% 55%);
+}
+.ff-bdg--risky .ff-bdg__verdict {
+  color: hsl(42 95% 56%);
+}
+.ff-bdg--clean .ff-bdg__verdict {
+  color: hsl(142 70% 48%);
+}
+
+.ff-bdg__label {
+  font-size: 11px;
+  color: hsl(215 16% 70%);
+}
+
+.ff-bdg__pulse {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: hsl(28 100% 56%);
+  animation: ff-pulse 1.4s ease-out infinite;
+}
+
+@keyframes ff-pulse {
+  0% {
+    box-shadow: 0 0 0 0 hsl(28 100% 56% / 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 12px hsl(28 100% 56% / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ff-bdg__pulse {
+    animation: none;
+  }
+}

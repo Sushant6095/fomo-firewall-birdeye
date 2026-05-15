@@ -1,0 +1,20 @@
+{
+  "name": "@fomo/scoring-mcp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "server.ts",
+  "scripts": {
+    "start": "tsx server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fomo/scoring": "workspace:*",
+    "@fomo/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}
