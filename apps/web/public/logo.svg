@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none" role="img" aria-label="FOMO Firewall — Pulse Shield">
+  <title>FOMO Firewall — Pulse Shield</title>
+  <defs>
+    <linearGradient id="l-wedge" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A3E635"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <radialGradient id="l-glow" cx="128" cy="128" r="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="128" cy="128" r="120" fill="url(#l-glow)"/>
+  <g fill="none" stroke="#10B981" stroke-linecap="round">
+    <circle cx="128" cy="128" r="116" stroke-opacity="0.85" stroke-width="3"/>
+    <circle cx="128" cy="128" r="88"  stroke-opacity="0.45" stroke-width="1.5" stroke-dasharray="3 5"/>
+    <circle cx="128" cy="128" r="62"  stroke-opacity="0.30" stroke-width="1" stroke-dasharray="2 4"/>
+  </g>
+  <path d="M128 128 L128 12 A116 116 0 0 1 232 96 Z" fill="url(#l-wedge)" opacity="0.18">
+    <animateTransform attributeName="transform" type="rotate" from="0 128 128" to="360 128 128" dur="6s" repeatCount="indefinite"/>
+  </path>
+  <g fill="#E8F5E9">
+    <rect x="94" y="76" width="14" height="104" rx="2"/>
+    <polygon points="94,76 174,76 162,92 108,92"/>
+    <polygon points="94,118 154,118 142,134 108,134"/>
+  </g>
+  <circle cx="128" cy="20" r="6" fill="#EF4444">
+    <animate attributeName="r" values="6;9;6" dur="1.6s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="128" cy="20" r="3" fill="#FFFFFF"/>
+</svg>

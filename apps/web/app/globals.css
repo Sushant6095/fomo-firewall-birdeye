@@ -1,0 +1,355 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    background: #050d09;
+    color: #e8f5e9;
+    /* Native SF Pro on Apple devices, Inter elsewhere. */
+    font-family:
+      -apple-system,
+      BlinkMacSystemFont,
+      "SF Pro Display",
+      "SF Pro Text",
+      "Inter",
+      system-ui,
+      "Helvetica Neue",
+      sans-serif;
+    font-feature-settings:
+      "tnum" 1,
+      "ss01" 1,
+      "cv11" 1;
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Tighter tracking on large display type, the way Apple does it. */
+  h1,
+  h2,
+  h3,
+  .font-display-lg,
+  .font-headline-md {
+    letter-spacing: -0.022em;
+  }
+
+  /* Tabular numerals for any monospaced data. */
+  code,
+  kbd,
+  pre,
+  .font-mono,
+  .font-mono-data,
+  .font-mono-label {
+    font-feature-settings:
+      "tnum" 1,
+      "zero" 1;
+  }
+
+  ::selection {
+    background-color: rgba(16, 185, 129, 0.3);
+    color: #10b981;
+  }
+}
+
+@layer utilities {
+  /* ─── Stitch / Obsidian Sentinel utility classes ─── */
+
+  .grid-pattern {
+    background-size: 40px 40px;
+    background-image:
+      linear-gradient(
+        to right,
+        rgba(52, 211, 153, 0.05) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(52, 211, 153, 0.05) 1px,
+        transparent 1px
+      );
+  }
+
+  .dot-pattern {
+    background-image: radial-gradient(
+      rgba(52, 211, 153, 0.15) 1px,
+      transparent 1px
+    );
+    background-size: 16px 16px;
+  }
+
+  .border-beam {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(16, 185, 129, 0.8) 50%,
+      transparent 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer-slide 2.5s linear infinite;
+  }
+
+  @keyframes shimmer-slide {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  @keyframes shimmerSlide {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes borderBeamRotate {
+    0% {
+      background-position: 0% 50%;
+      transform: rotate(0deg);
+    }
+    100% {
+      background-position: 100% 50%;
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ── MagicUI / 21st.dev animations ── */
+  @keyframes marquee-horizontal {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-100% - var(--gap))); }
+  }
+  @keyframes marquee-reverse {
+    from { transform: translateX(calc(-100% - var(--gap))); }
+    to { transform: translateX(0); }
+  }
+  @keyframes marquee-vertical {
+    from { transform: translateY(0); }
+    to { transform: translateY(calc(-100% - var(--gap))); }
+  }
+  @keyframes marquee-vertical-reverse {
+    from { transform: translateY(calc(-100% - var(--gap))); }
+    to { transform: translateY(0); }
+  }
+  .animate-marquee-horizontal { animation: marquee-horizontal var(--duration) linear infinite; }
+  .animate-marquee-reverse { animation: marquee-reverse var(--duration) linear infinite; }
+  .animate-marquee-vertical { animation: marquee-vertical var(--duration) linear infinite; }
+  .animate-marquee-vertical-reverse { animation: marquee-vertical-reverse var(--duration) linear infinite; }
+
+  @keyframes orbit {
+    0% { transform: rotate(calc(var(--angle, 0) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle, 0) * -1deg)); }
+    100% { transform: rotate(calc(var(--angle, 0) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle, 0) * -1deg) - 360deg)); }
+  }
+  .animate-orbit { animation: orbit calc(var(--duration) * 1s) linear infinite; }
+
+  @keyframes meteor {
+    0% { transform: rotate(215deg) translateX(0); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: rotate(215deg) translateX(-500px); opacity: 0; }
+  }
+  .animate-meteor { animation: meteor linear infinite; }
+
+  @keyframes ripple {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(0.9); }
+  }
+  .animate-ripple { animation: ripple var(--duration, 3400ms) ease calc(var(--i, 0) * 0.2s) infinite; }
+
+  @keyframes shine {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+  }
+  .animate-shine::before { animation: shine var(--duration) infinite linear; }
+
+  @keyframes shiny-text {
+    0%, 90%, 100% { background-position: calc(-100% - var(--shimmer-width)) 0; }
+    30%, 60% { background-position: calc(100% + var(--shimmer-width)) 0; }
+  }
+  .animate-shiny-text { animation: shiny-text 8s infinite; }
+
+  @keyframes gradient {
+    to { background-position: var(--bg-size, 300%) 0; }
+  }
+  .animate-gradient { animation: gradient 8s linear infinite; }
+
+  @keyframes grid-flicker {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.5; }
+  }
+  .animate-grid-flicker { animation: grid-flicker 6s infinite; }
+
+  @keyframes grid {
+    0% { transform: translateY(-50%); }
+    100% { transform: translateY(0); }
+  }
+  .animate-grid { animation: grid 15s linear infinite; }
+
+  @keyframes spotlight {
+    0% { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
+    100% { opacity: 1; transform: translate(-50%, -40%) scale(1); }
+  }
+  .animate-spotlight { animation: spotlight 2s ease 0.75s 1 forwards; }
+
+  @keyframes pulse-ring {
+    0%, 100% { box-shadow: 0 0 0 0 var(--pulse-color); transform: scale(1); }
+    50% { box-shadow: 0 0 0 10px transparent; transform: scale(1.02); }
+  }
+  .animate-pulse-ring { animation: pulse-ring var(--duration) ease-in-out infinite; }
+
+  .glass-panel {
+    background: rgba(15, 26, 20, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(52, 211, 153, 0.12);
+  }
+
+  .glass-panel-elevated {
+    background: rgba(31, 45, 36, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+  }
+
+  .scanline-bg {
+    background-image: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(16, 185, 129, 0.08) 51%,
+      transparent 51%
+    );
+    background-size: 100% 4px;
+  }
+
+  .glow-danger,
+  .glow-critical {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.35);
+  }
+
+  .glow-safe {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 24px rgba(16, 185, 129, 0.35);
+  }
+
+  .glow-tertiary,
+  .glow-accent {
+    box-shadow: 0 0 15px rgba(132, 204, 22, 0.3);
+  }
+
+  .glow-text-primary {
+    text-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+  }
+
+  .glow-text-danger {
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  }
+
+  .signal-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: #10b981;
+    display: inline-block;
+    animation: pulse-signal 2s infinite;
+  }
+
+  .signal-dot.danger {
+    background: #ef4444;
+    animation: pulse-signal-danger 2s infinite;
+  }
+
+  @keyframes pulse-signal {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+  }
+
+  @keyframes pulse-signal-danger {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+  }
+
+  .table-row-hover:hover {
+    background: linear-gradient(
+      90deg,
+      rgba(16, 185, 129, 0.06) 0%,
+      transparent 100%
+    );
+    border-left: 2px solid #10b981;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings:
+      "FILL" 0,
+      "wght" 400,
+      "GRAD" 0,
+      "opsz" 24;
+  }
+}

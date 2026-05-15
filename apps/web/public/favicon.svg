@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none" role="img">
+  <title>FF</title>
+  <defs>
+    <radialGradient id="fav-glow" cx="128" cy="128" r="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fav-wedge" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A3E635"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dark backing so the mark contrasts on light browser tabs too -->
+  <circle cx="128" cy="128" r="124" fill="#050D09"/>
+
+  <!-- Glow -->
+  <circle cx="128" cy="128" r="120" fill="url(#fav-glow)"/>
+
+  <!-- Concentric radar rings (heavier stroke for favicon legibility) -->
+  <circle cx="128" cy="128" r="116" fill="none" stroke="#10B981" stroke-width="8"/>
+  <circle cx="128" cy="128" r="86"  fill="none" stroke="#10B981" stroke-opacity="0.45" stroke-width="3"/>
+
+  <!-- Static radar wedge -->
+  <path d="M128 128 L128 12 A116 116 0 0 1 232 96 Z" fill="url(#fav-wedge)" opacity="0.28"/>
+
+  <!-- Chevron F monogram, bigger so it reads at 16px -->
+  <rect x="84"  y="64" width="22" height="128" rx="2" fill="#E8F5E9"/>
+  <polygon points="84,64 184,64 168,84 106,84"     fill="#E8F5E9"/>
+  <polygon points="84,114 162,114 146,134 106,134" fill="#E8F5E9"/>
+
+  <!-- Detection ping (top, in critical red) -->
+  <circle cx="128" cy="20" r="10" fill="#EF4444"/>
+  <circle cx="128" cy="20" r="4"  fill="#FFFFFF"/>
+</svg>

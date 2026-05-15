@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Terminal Home | FOMO Firewall</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700;900&amp;family=Geist+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#0e150e",
+                        "inverse-primary": "#006e2f",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#dce5d9",
+                        "secondary": "#ffb95f",
+                        "tertiary-container": "#ff8e4d",
+                        "primary-container": "#22c55e",
+                        "on-primary-container": "#004b1e",
+                        "primary-fixed": "#6bff8f",
+                        "inverse-on-surface": "#2a322a",
+                        "secondary-fixed": "#ffddb8",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "surface-container-highest": "#2f372e",
+                        "inverse-surface": "#dce5d9",
+                        "surface-bright": "#333b33",
+                        "on-tertiary-fixed": "#341100",
+                        "outline": "#869585",
+                        "secondary-container": "#ee9800",
+                        "tertiary-fixed": "#ffdbca",
+                        "on-primary-fixed": "#002109",
+                        "surface-dim": "#0e150e",
+                        "surface-container-lowest": "#091009",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-surface": "#dce5d9",
+                        "on-secondary": "#472a00",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed-variant": "#783200",
+                        "surface-tint": "#4ae176",
+                        "on-primary-fixed-variant": "#005321",
+                        "on-secondary-fixed": "#2a1700",
+                        "surface": "#0e150e",
+                        "error": "#ffb4ab",
+                        "primary-fixed-dim": "#4ae176",
+                        "primary": "#4be277",
+                        "on-secondary-container": "#5b3800",
+                        "tertiary": "#ffb792",
+                        "on-surface-variant": "#bccbb9",
+                        "on-tertiary": "#552100",
+                        "on-primary": "#003915",
+                        "on-tertiary-container": "#6d2d00",
+                        "surface-container-high": "#242c24",
+                        "surface-variant": "#2f372e",
+                        "surface-container-low": "#161d16",
+                        "error-container": "#93000a",
+                        "surface-container": "#1a221a",
+                        "outline-variant": "#3d4a3d",
+                        "tertiary-fixed-dim": "#ffb690"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "container-margin": "24px",
+                        "xl": "40px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "mono-data": ["Geist Mono", "monospace"],
+                        "headline-md": ["Geist", "sans-serif"],
+                        "display-lg": ["Geist", "sans-serif"],
+                        "headline-sm": ["Geist", "sans-serif"],
+                        "mono-label": ["Geist Mono", "monospace"],
+                        "body-sm": ["Geist", "sans-serif"],
+                        "body-md": ["Geist", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "mono-data": ["13px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "headline-sm": ["18px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "mono-label": ["11px", { "lineHeight": "1.1", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .grid-pattern {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(134, 149, 133, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(134, 149, 133, 0.04) 1px, transparent 1px);
+        }
+        .dot-pattern {
+            background-image: radial-gradient(rgba(134, 149, 133, 0.1) 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+        .border-beam {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 180, 171, 0.8) 50%, transparent 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background-size: 200% 100%;
+        }
+        .glass-panel {
+            background: rgba(15, 15, 18, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(61, 74, 61, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background grid-pattern min-h-screen flex selection:bg-primary-container/30 selection:text-primary">
+<!-- SideNavBar -->
+<nav class="hidden md:flex bg-surface-container-low dark:bg-surface-container-low fixed left-0 top-0 h-screen flex-col items-center py-md z-50 w-20 bg-surface-container-low/80 backdrop-blur-xl border-r border-outline-variant">
+<div class="mb-xl flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline-variant/30 relative overflow-hidden">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary tracking-tighter">FF</span>
+</div>
+</div>
+<div class="flex flex-col gap-sm w-full px-2">
+<!-- Active Tab: Intelligence (Home) -->
+<a class="flex justify-center items-center text-primary dark:text-primary bg-primary-container/10 rounded-full p-2 scale-110 transition-transform hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200" href="#" title="Intelligence">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+</a>
+<a class="flex justify-center items-center text-on-surface-variant dark:text-on-surface-variant p-2 opacity-60 hover:opacity-100 transition-opacity hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200 rounded-full" href="#" title="Liquidations">
+<span class="material-symbols-outlined">security</span>
+</a>
+<a class="flex justify-center items-center text-on-surface-variant dark:text-on-surface-variant p-2 opacity-60 hover:opacity-100 transition-opacity hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200 rounded-full" href="#" title="Alerts">
+<span class="material-symbols-outlined">notifications</span>
+</a>
+<a class="flex justify-center items-center text-on-surface-variant dark:text-on-surface-variant p-2 opacity-60 hover:opacity-100 transition-opacity hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200 rounded-full" href="#" title="Wallet">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</a>
+<a class="flex justify-center items-center text-on-surface-variant dark:text-on-surface-variant p-2 opacity-60 hover:opacity-100 transition-opacity hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200 rounded-full" href="#" title="Settings">
+<span class="material-symbols-outlined">settings</span>
+</a>
+</div>
+<div class="mt-auto flex flex-col gap-sm w-full px-2">
+<a class="flex justify-center items-center text-on-surface-variant dark:text-on-surface-variant p-2 opacity-60 hover:opacity-100 transition-opacity hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200 rounded-full" href="#" title="Support">
+<span class="material-symbols-outlined">help</span>
+</a>
+<a class="flex justify-center items-center text-on-surface-variant dark:text-on-surface-variant p-2 opacity-60 hover:opacity-100 transition-opacity hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-all duration-200 rounded-full" href="#" title="API">
+<span class="material-symbols-outlined">api</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<div class="flex-1 flex flex-col min-w-0 md:ml-20">
+<!-- TopAppBar -->
+<header class="hidden md:flex bg-transparent docked top-0 w-full bg-background/20 backdrop-blur-md border-b border-outline-variant/10 flex justify-between items-center w-full px-container-margin py-sm z-40 sticky">
+<div class="flex items-center gap-container-margin">
+<span class="font-headline-md text-headline-md font-black text-primary dark:text-primary">FOMO Firewall</span>
+<nav class="flex gap-md">
+<!-- Dashboard is active logically for Home -->
+<a class="font-headline-sm text-headline-sm text-primary dark:text-primary border-b-2 border-primary pb-1 hover:text-primary transition-colors duration-300" href="#">Dashboard</a>
+<a class="font-headline-sm text-headline-sm text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary transition-colors duration-300" href="#">Scanner</a>
+<a class="font-headline-sm text-headline-sm text-on-surface-variant dark:text-on-surface-variant font-medium hover:text-primary transition-colors duration-300" href="#">Terminal</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-sm">
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-300">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-300">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+<button class="bg-primary/10 text-primary font-mono-label text-mono-label px-4 py-2 rounded-full border border-primary/30 hover:bg-primary/20 transition-all">Open Case File</button>
+</div>
+</header>
+<main class="flex-1 w-full max-w-7xl mx-auto px-md md:px-container-margin pb-xl">
+<!-- Hero Section (8 rows) -->
+<section class="min-h-[614px] flex flex-col justify-center items-center text-center relative py-20 mb-xl border-b border-outline-variant/10">
+<!-- Spotlight effect simulated with radial gradient -->
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-background to-background pointer-events-none -z-10"></div>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container border border-outline-variant/30 mb-8 glass-panel">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+<span class="font-mono-label text-mono-label text-on-surface-variant">Live Network Telemetry: <span class="text-on-surface">3.4M TPS Inspected</span></span>
+</div>
+<h1 class="font-display-lg text-display-lg max-w-4xl mx-auto mb-6 bg-clip-text text-transparent bg-gradient-to-b from-on-background to-on-surface-variant tracking-tighter">
+                    You are not early. <br/><span class="text-error">You are exit liquidity.</span>
+</h1>
+<p class="font-headline-sm text-headline-sm text-on-surface-variant max-w-2xl mx-auto mb-10">
+                    FOMO Firewall reads Birdeye in real-time, executing forensic analysis on token flow to calculate exact TrapScores before you ape.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+<button class="relative bg-primary text-on-primary font-headline-sm text-headline-sm px-8 py-4 rounded-xl overflow-hidden group border border-primary-fixed shimmer">
+<span class="relative z-10 flex items-center gap-2">
+<span class="material-symbols-outlined">content_paste</span>
+                            Paste a mint
+                        </span>
+<div class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+</button>
+<button class="bg-surface-container-high text-on-surface font-headline-sm text-headline-sm px-8 py-4 rounded-xl border border-outline-variant/30 hover:bg-error/10 hover:text-error hover:border-error/50 transition-all duration-300 flex items-center gap-2 group">
+<span class="material-symbols-outlined group-hover:text-error">radar</span>
+                        Show me the worst trap
+                    </button>
+</div>
+</section>
+<!-- Risk Ticker (Marquee) -->
+<section class="mb-xl overflow-hidden -mx-md md:-mx-container-margin px-md md:px-container-margin py-sm border-b border-outline-variant/10 bg-surface-container-lowest/50">
+<div class="flex gap-4 animate-[pulse_10s_ease-in-out_infinite] opacity-80 whitespace-nowrap overflow-x-auto no-scrollbar">
+<!-- Ticker Items -->
+<div class="flex items-center gap-3 px-4 py-2 rounded-lg bg-surface-container-low border border-error/20 relative group">
+<div class="border-beam hidden group-hover:block"></div>
+<span class="font-mono-data text-mono-data text-on-surface font-bold">$PEPE69</span>
+<span class="font-mono-data text-mono-data text-error">98 TS</span>
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+</div>
+<div class="flex items-center gap-3 px-4 py-2 rounded-lg bg-surface-container-low border border-error/20 relative group">
+<div class="border-beam hidden group-hover:block"></div>
+<span class="font-mono-data text-mono-data text-on-surface font-bold">$MOONB</span>
+<span class="font-mono-data text-mono-data text-error">94 TS</span>
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+</div>
+<div class="flex items-center gap-3 px-4 py-2 rounded-lg bg-surface-container-low border border-secondary/20 relative group">
+<span class="font-mono-data text-mono-data text-on-surface font-bold">$SOLAI</span>
+<span class="font-mono-data text-mono-data text-secondary">72 TS</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</div>
+<div class="flex items-center gap-3 px-4 py-2 rounded-lg bg-surface-container-low border border-primary/20 relative group">
+<span class="font-mono-data text-mono-data text-on-surface font-bold">$REAL</span>
+<span class="font-mono-data text-mono-data text-primary">12 TS</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+</div>
+<!-- Duplicates for visual fill -->
+<div class="flex items-center gap-3 px-4 py-2 rounded-lg bg-surface-container-low border border-error/20 relative group">
+<div class="border-beam hidden group-hover:block"></div>
+<span class="font-mono-data text-mono-data text-on-surface font-bold">$SCAMV2</span>
+<span class="font-mono-data text-mono-data text-error">99 TS</span>
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+</div>
+</div>
+</section>
+<!-- 2-Column Body Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Main Intelligence Feed (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<!-- Featured Case Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Score Card -->
+<div class="bg-surface-container rounded-xl p-6 border border-outline-variant/30 relative overflow-hidden flex flex-col items-center justify-center min-h-[300px]">
+<div class="border-beam block opacity-50"></div>
+<div class="absolute inset-0 dot-pattern opacity-20"></div>
+<div class="relative z-10 flex flex-col items-center">
+<span class="font-mono-label text-mono-label text-error uppercase tracking-widest mb-2">Critical Trap Warning</span>
+<div class="text-[120px] font-display-lg leading-none font-bold text-error drop-shadow-[0_0_15px_rgba(255,180,171,0.3)]">98</div>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-2">$DOGEWIFHAT</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant mt-1 bg-surface-container-highest px-2 py-1 rounded">7D...3xqQ</span>
+</div>
+</div>
+<!-- Analysis Stream -->
+<div class="bg-surface-container rounded-xl p-6 border border-outline-variant/30 flex flex-col gap-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant/20 pb-2">Forensic Findings</h3>
+<div class="flex flex-col gap-3">
+<div class="flex items-start gap-3 p-3 rounded-lg bg-error/5 border border-error/10">
+<span class="material-symbols-outlined text-error mt-0.5 text-sm">warning</span>
+<div>
+<div class="font-body-md text-body-md text-on-surface">Top 10 Wallets hold 84%</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant text-xs mt-1">Concentration Risk</div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-error/5 border border-error/10">
+<span class="material-symbols-outlined text-error mt-0.5 text-sm">water_drop</span>
+<div>
+<div class="font-body-md text-body-md text-on-surface">Liquidity Unlocked</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant text-xs mt-1">Rug pull imminent capability</div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-secondary/5 border border-secondary/10">
+<span class="material-symbols-outlined text-secondary mt-0.5 text-sm">history</span>
+<div>
+<div class="font-body-md text-body-md text-on-surface">Dev Wallet History</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant text-xs mt-1">Connected to 3 previous drains</div>
+</div>
+</div>
+</div>
+<button class="mt-auto w-full py-2 bg-surface-container-highest text-on-surface font-mono-label text-mono-label rounded-lg border border-outline-variant/30 hover:bg-surface-variant transition-colors">View Full Case File</button>
+</div>
+</div>
+<!-- Signal Bento (3x2) -->
+<h3 class="font-headline-md text-headline-md text-on-surface mt-xl mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">monitoring</span>
+                        Live Signals
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- MagicCard 1 -->
+<div class="bg-surface-container rounded-xl p-5 border border-outline-variant/30 hover:border-primary/50 transition-colors group">
+<div class="flex justify-between items-start mb-4">
+<span class="font-mono-label text-mono-label text-on-surface-variant">SMART MONEY INFLOW</span>
+<span class="material-symbols-outlined text-primary text-sm">trending_up</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface mb-1">$BONK</div>
+<div class="font-mono-data text-mono-data text-primary">+244K USDC <span class="text-on-surface-variant">(1h)</span></div>
+</div>
+<!-- MagicCard 2 -->
+<div class="bg-surface-container rounded-xl p-5 border border-outline-variant/30 hover:border-error/50 transition-colors group relative overflow-hidden">
+<div class="border-beam hidden group-hover:block opacity-50"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<span class="font-mono-label text-mono-label text-on-surface-variant">INSIDER EXIT</span>
+<span class="material-symbols-outlined text-error text-sm">logout</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface mb-1">$TRENCH</div>
+<div class="font-mono-data text-mono-data text-error">-1.2M SOL <span class="text-on-surface-variant">Dev Wallet</span></div>
+</div>
+<!-- MagicCard 3 -->
+<div class="bg-surface-container rounded-xl p-5 border border-outline-variant/30 hover:border-secondary/50 transition-colors group">
+<div class="flex justify-between items-start mb-4">
+<span class="font-mono-label text-mono-label text-on-surface-variant">WASH TRADING</span>
+<span class="material-symbols-outlined text-secondary text-sm">sync_problem</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface mb-1">$NINJA</div>
+<div class="font-mono-data text-mono-data text-secondary">Vol:Liq Ratio 45:1</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar / Alert Wire (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-5 h-full min-h-[600px] flex flex-col">
+<div class="flex items-center justify-between mb-6 pb-4 border-b border-outline-variant/10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-error animate-pulse">crisis_alert</span>
+                                Terminal Wire
+                            </h3>
+<span class="font-mono-label text-mono-label text-on-surface-variant bg-surface-container px-2 py-1 rounded">LIVE</span>
+</div>
+<div class="flex-1 flex flex-col gap-3 overflow-hidden relative">
+<!-- Gradient fade top/bottom -->
+<div class="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-surface-container-low to-transparent z-10"></div>
+<!-- Alert Items -->
+<div class="bg-surface-container rounded-lg p-3 border-l-2 border-l-error border border-outline-variant/10 shadow-sm opacity-90 hover:opacity-100 transition-opacity cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="font-mono-label text-mono-label text-error">RUG DETECTED</span>
+<span class="font-mono-label text-mono-label text-on-surface-variant text-[10px]">Just now</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface">$PEPEAI liquidity pool drained. 100% loss.</div>
+</div>
+<div class="bg-surface-container rounded-lg p-3 border-l-2 border-l-secondary border border-outline-variant/10 shadow-sm opacity-80 hover:opacity-100 transition-opacity cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="font-mono-label text-mono-label text-secondary">SNIPER BOTS</span>
+<span class="font-mono-label text-mono-label text-on-surface-variant text-[10px]">2m ago</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface">42 sniper bots accumulated 30% supply of $NEW.</div>
+</div>
+<div class="bg-surface-container rounded-lg p-3 border-l-2 border-l-primary border border-outline-variant/10 shadow-sm opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="font-mono-label text-mono-label text-primary">CLEAN LAUNCH</span>
+<span class="font-mono-label text-mono-label text-on-surface-variant text-[10px]">5m ago</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface">$SAFE LP locked for 1yr. Renounced contract.</div>
+</div>
+<div class="bg-surface-container rounded-lg p-3 border-l-2 border-l-error border border-outline-variant/10 shadow-sm opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="font-mono-label text-mono-label text-error">HONEYPOT</span>
+<span class="font-mono-label text-mono-label text-on-surface-variant text-[10px]">12m ago</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface">$SCAM sell function disabled. TrapScore: 100.</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-surface-container-low to-transparent z-10"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-dim dark:bg-surface-dim full-width bottom-0 bg-surface-container-lowest/50 backdrop-blur-sm border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center w-full px-container-margin py-lg z-30">
+<div class="font-headline-sm text-headline-sm text-on-surface mb-4 md:mb-0 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                FOMO Firewall
+            </div>
+<div class="flex gap-lg">
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary underline-offset-4 hover:underline transition-all duration-500 ease-in-out text-on-surface-variant" href="#">Documentation</a>
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary underline-offset-4 hover:underline transition-all duration-500 ease-in-out text-on-surface-variant" href="#">Terms of Engagement</a>
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary underline-offset-4 hover:underline transition-all duration-500 ease-in-out text-on-surface-variant" href="#">Privacy</a>
+</div>
+<div class="font-mono-label text-mono-label text-on-surface-variant mt-4 md:mt-0 opacity-50">
+                Built on Birdeye Data
+            </div>
+</footer>
+</div>
+</body></html>

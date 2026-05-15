@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Signal Matrix - FOMO Firewall</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@500;600&amp;family=Geist:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#0e150e",
+                      "inverse-primary": "#006e2f",
+                      "on-error-container": "#ffdad6",
+                      "on-background": "#dce5d9",
+                      "secondary": "#ffb95f",
+                      "tertiary-container": "#ff8e4d",
+                      "primary-container": "#22c55e",
+                      "on-primary-container": "#004b1e",
+                      "primary-fixed": "#6bff8f",
+                      "inverse-on-surface": "#2a322a",
+                      "secondary-fixed": "#ffddb8",
+                      "on-secondary-fixed-variant": "#653e00",
+                      "surface-container-highest": "#2f372e",
+                      "inverse-surface": "#dce5d9",
+                      "surface-bright": "#333b33",
+                      "on-tertiary-fixed": "#341100",
+                      "outline": "#869585",
+                      "secondary-container": "#ee9800",
+                      "tertiary-fixed": "#ffdbca",
+                      "on-primary-fixed": "#002109",
+                      "surface-dim": "#0e150e",
+                      "surface-container-lowest": "#091009",
+                      "secondary-fixed-dim": "#ffb95f",
+                      "on-surface": "#dce5d9",
+                      "on-secondary": "#472a00",
+                      "on-error": "#690005",
+                      "on-tertiary-fixed-variant": "#783200",
+                      "surface-tint": "#4ae176",
+                      "on-primary-fixed-variant": "#005321",
+                      "on-secondary-fixed": "#2a1700",
+                      "surface": "#0e150e",
+                      "error": "#ffb4ab",
+                      "primary-fixed-dim": "#4ae176",
+                      "primary": "#4be277",
+                      "on-secondary-container": "#5b3800",
+                      "tertiary": "#ffb792",
+                      "on-surface-variant": "#bccbb9",
+                      "on-tertiary": "#552100",
+                      "on-primary": "#003915",
+                      "on-tertiary-container": "#6d2d00",
+                      "surface-container-high": "#242c24",
+                      "surface-variant": "#2f372e",
+                      "surface-container-low": "#161d16",
+                      "error-container": "#93000a",
+                      "surface-container": "#1a221a",
+                      "outline-variant": "#3d4a3d",
+                      "tertiary-fixed-dim": "#ffb690"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "base": "4px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "container-margin": "24px",
+                      "xl": "40px",
+                      "lg": "24px",
+                      "xs": "4px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "mono-data": ["Geist Mono"],
+                      "headline-md": ["Geist Sans"],
+                      "display-lg": ["Geist Sans"],
+                      "headline-sm": ["Geist Sans"],
+                      "mono-label": ["Geist Mono"],
+                      "body-sm": ["Geist Sans"],
+                      "body-md": ["Geist Sans"]
+              },
+              "fontSize": {
+                      "mono-data": ["13px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                      "headline-sm": ["18px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "mono-label": ["11px", {"lineHeight": "1.1", "fontWeight": "600"}],
+                      "body-sm": ["13px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "body-md": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Custom Utilities for cinematic developer modern aesthetic */
+        .border-beam-active {
+            position: relative;
+        }
+        .border-beam-active::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(90deg, transparent, var(--tw-colors-error), transparent);
+            background-size: 200% 100%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            animation: beamMove 3s linear infinite;
+        }
+        @keyframes beamMove {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+        .spring-hover:hover {
+            transform: scale(1.02);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex relative overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- Ambient Background Data Grid -->
+<div class="fixed inset-0 z-0 pointer-events-none bg-[linear-gradient(to_right,var(--tw-colors-outline-variant)_1px,transparent_1px),linear-gradient(to_bottom,var(--tw-colors-outline-variant)_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.03]"></div>
+<!-- 
+    ======================================================================
+    SIDE NAV BAR (Generated from Shared Components JSON)
+    ======================================================================
+    -->
+<nav class="fixed left-0 top-0 h-screen w-20 flex flex-col items-center py-md z-50 bg-surface-container-low/80 backdrop-blur-xl border-r border-outline-variant">
+<!-- Brand Logo Area -->
+<div class="mb-xl text-primary flex justify-center w-full">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 flex flex-col space-y-lg w-full items-center">
+<!-- Active Tab: Intelligence -->
+<a class="text-primary dark:text-primary bg-primary-container/10 rounded-full p-2 scale-110 transition-transform flex items-center justify-center group relative" href="#" title="Intelligence">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+<div class="absolute left-14 bg-surface-container-highest text-on-surface px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity font-mono-label text-mono-label whitespace-nowrap pointer-events-none border border-outline-variant">Intelligence</div>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant p-2 opacity-60 hover:opacity-100 transition-opacity hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-full flex items-center justify-center group relative duration-200" href="#" title="Liquidations">
+<span class="material-symbols-outlined text-[24px]">security</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant p-2 opacity-60 hover:opacity-100 transition-opacity hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-full flex items-center justify-center group relative duration-200" href="#" title="Alerts">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<!-- Notification Dot -->
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full shadow-[0_0_8px_var(--tw-colors-error)]"></span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant p-2 opacity-60 hover:opacity-100 transition-opacity hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-full flex items-center justify-center group relative duration-200" href="#" title="Wallet">
+<span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant p-2 opacity-60 hover:opacity-100 transition-opacity hover:bg-surface-container-highest dark:hover:bg-surface-container-highest rounded-full flex items-center justify-center group relative duration-200" href="#" title="Settings">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+</a>
+</div>
+<!-- Footer Actions -->
+<div class="flex flex-col space-y-md mt-auto items-center">
+<button class="bg-primary/10 text-primary p-2 rounded-full hover:bg-primary/20 transition-colors border border-primary/20" title="Open Case File">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+<a class="text-on-surface-variant opacity-60 hover:opacity-100 p-2" href="#" title="Support">
+<span class="material-symbols-outlined text-[20px]">help</span>
+</a>
+<a class="text-on-surface-variant opacity-60 hover:opacity-100 p-2" href="#" title="API">
+<span class="material-symbols-outlined text-[20px]">api</span>
+</a>
+<!-- User Avatar -->
+<div class="w-10 h-10 rounded-full bg-surface-variant border-2 border-outline-variant overflow-hidden mt-2 cursor-pointer hover:border-primary transition-colors">
+<img alt="User Terminal Profile" class="w-full h-full object-cover" data-alt="A hyper-detailed, futuristic cyborg avatar portrait of an intelligence officer. The face is partially obscured by tactical augmented reality visors glowing with neon green data streams against a pitch-black background. Cinematic lighting emphasizes high-contrast metallic textures and a high-stakes, cyberpunk aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWZq69ta3cptFY3im5JJkqOtmGAMAQZwz_CuPAH_iVhcII6HYJ0n8tGp82OCUC2yE7_teA77v_8BeB2OasKL4Ihxcqk2zYbgRBwmYsJj-orGrF-5Q0-sBt9Vix_ZGfQz5KU0cfOd_gAHRyDlvNorDRtqy3MjMjzRjhwT-Z8-bYwFVdC8qgaB71PaMS2IIbs8544ei3PvlOKEH5zQpE4fo7WZSPShFjdWkGc-DOiuABs19S4jU46hLPup6A2g7il5imFRGsD-XlU6Q"/>
+</div>
+</div>
+</nav>
+<!-- 
+    ======================================================================
+    MAIN CANVAS 
+    ======================================================================
+    -->
+<div class="flex-1 ml-20 flex flex-col min-h-screen relative z-10 w-[calc(100%-80px)]">
+<!-- 
+        ======================================================================
+        TOP APP BAR (Generated from Shared Components JSON)
+        ======================================================================
+        -->
+<header class="docked top-0 w-full flex justify-between items-center px-container-margin py-sm bg-background/20 backdrop-blur-md border-b border-outline-variant/10 z-40 sticky">
+<!-- Brand Area -->
+<div class="flex items-center space-x-lg">
+<h1 class="font-headline-md text-headline-md font-black text-primary dark:text-primary tracking-tighter">FOMO Firewall</h1>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center space-x-md border-l border-outline-variant/30 pl-md h-6">
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium text-body-sm hover:text-primary transition-colors duration-300" href="#">Dashboard</a>
+<!-- Active Link -->
+<a class="text-primary dark:text-primary border-b-2 border-primary pb-1 font-body-sm" href="#">Scanner</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-medium text-body-sm hover:text-primary transition-colors duration-300" href="#">Terminal</a>
+</nav>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center space-x-md">
+<div class="flex space-x-xs">
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-300 p-2 rounded-lg hover:bg-surface-container-high active:scale-95">
+<span class="material-symbols-outlined text-[20px]">terminal</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-300 p-2 rounded-lg hover:bg-surface-container-high active:scale-95">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary font-headline-sm text-headline-sm px-4 py-1.5 rounded border border-primary-fixed/50 hover:bg-primary-fixed transition-colors relative overflow-hidden group shadow-[0_0_15px_rgba(75,226,119,0.15)] active:scale-95">
+<span class="relative z-10 flex items-center space-x-2">
+<span>Open Case File</span>
+</span>
+<!-- Shimmer Effect -->
+<div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite] skew-x-12"></div>
+</button>
+</div>
+</header>
+<!-- 
+        ======================================================================
+        PAGE CONTENT: SIGNAL MATRIX (/signals)
+        ======================================================================
+        -->
+<main class="flex-1 px-container-margin py-lg grid grid-cols-1 md:grid-cols-12 gap-gutter w-full max-w-[1600px] mx-auto">
+<!-- Page Header (Col Span 12) -->
+<div class="col-span-1 md:col-span-12 flex flex-col md:flex-row justify-between items-start md:items-end mb-sm gap-4 border-b border-outline-variant/20 pb-md">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-background mb-1">Signal Matrix</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Real-time telemetric breakdown of liquidity flows and on-chain tactical intelligence.</p>
+</div>
+<div class="flex items-center space-x-3 bg-surface-container-low px-4 py-2 rounded-lg border border-outline-variant">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</span>
+<span class="font-mono-data text-mono-data text-primary uppercase tracking-widest">Live Matrix Stream</span>
+</div>
+</div>
+<!-- Signal Selector Tabs (Col Span 12) -->
+<div class="col-span-1 md:col-span-12 mb-2">
+<div class="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+<!-- Active Tab -->
+<button class="whitespace-nowrap px-4 py-2 rounded-lg bg-surface-container-high text-primary border border-primary/30 shadow-[0_0_10px_rgba(75,226,119,0.1)] font-headline-sm text-headline-sm transition-all flex items-center space-x-2">
+<span class="material-symbols-outlined text-[18px]">query_stats</span>
+<span>Smart Money Divergence</span>
+</button>
+<!-- Inactive Tabs -->
+<button class="whitespace-nowrap px-4 py-2 rounded-lg bg-surface-container-low text-on-surface-variant border border-transparent hover:bg-surface-container-high hover:text-on-surface hover:border-outline-variant/50 transition-all font-body-sm text-body-sm">Insider Netflow</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-lg bg-surface-container-low text-on-surface-variant border border-transparent hover:bg-surface-container-high hover:text-on-surface hover:border-outline-variant/50 transition-all font-body-sm text-body-sm">Liquidity Fragility</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-lg bg-surface-container-low text-on-surface-variant border border-transparent hover:bg-surface-container-high hover:text-on-surface hover:border-outline-variant/50 transition-all font-body-sm text-body-sm">Holder Concentration</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-lg bg-surface-container-low text-on-surface-variant border border-transparent hover:bg-surface-container-high hover:text-on-surface hover:border-outline-variant/50 transition-all font-body-sm text-body-sm">Contract Anomalies</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-lg bg-surface-container-low text-on-surface-variant border border-transparent hover:bg-surface-container-high hover:text-on-surface hover:border-outline-variant/50 transition-all font-body-sm text-body-sm">Social Volume Spike</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-lg bg-surface-container-low text-on-surface-variant border border-transparent hover:bg-surface-container-high hover:text-on-surface hover:border-outline-variant/50 transition-all font-body-sm text-body-sm">Wash Trading Prob</button>
+</div>
+</div>
+<!-- Metrics Strip: 4x MagicCards (Col Span 12) -->
+<div class="col-span-1 md:col-span-12 grid grid-cols-2 lg:grid-cols-4 gap-gutter mb-sm">
+<!-- Critical Metric -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md flex flex-col justify-between relative overflow-hidden border-beam-active bg-[#0e150e]/80 backdrop-blur-md">
+<div class="flex justify-between items-start mb-4">
+<span class="font-mono-label text-mono-label text-on-surface-variant uppercase">Firing Now</span>
+<span class="material-symbols-outlined text-error text-[20px]">warning</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-error">142</div>
+<div class="font-body-sm text-body-sm text-error/80 mt-1 flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1">trending_up</span> +24% vs 1H Avg
+                        </div>
+</div>
+</div>
+<!-- Normal Metric 1 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md flex flex-col justify-between relative overflow-hidden hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-4">
+<span class="font-mono-label text-mono-label text-on-surface-variant uppercase">Avg Contribution</span>
+<span class="material-symbols-outlined text-primary text-[20px]">account_balance</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface">34.2<span class="text-headline-md text-on-surface-variant">%</span></div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">Of total volume analyzed</div>
+</div>
+</div>
+<!-- Normal Metric 2 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md flex flex-col justify-between relative overflow-hidden hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-4">
+<span class="font-mono-label text-mono-label text-on-surface-variant uppercase">Signal Confidence</span>
+<span class="material-symbols-outlined text-secondary text-[20px]">radar</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface">89<span class="text-headline-md text-on-surface-variant">%</span></div>
+<!-- Gauge visualization mock -->
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-secondary w-[89%] rounded-full shadow-[0_0_5px_var(--tw-colors-secondary)]"></div>
+</div>
+</div>
+</div>
+<!-- Normal Metric 3 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-md flex flex-col justify-between relative overflow-hidden hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-4">
+<span class="font-mono-label text-mono-label text-on-surface-variant uppercase">False Positive Rate</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">rule</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface">2.4<span class="text-headline-md text-on-surface-variant">%</span></div>
+<div class="font-body-sm text-body-sm text-primary mt-1 flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1">trending_down</span> Improved by 0.5%
+                        </div>
+</div>
+</div>
+</div>
+<!-- Charting Section (Middle) -->
+<!-- AreaChart (Smart Money volumes) -->
+<div class="col-span-1 md:col-span-12 lg:col-span-8 bg-surface-container border border-outline-variant rounded-xl p-md flex flex-col h-[340px] relative overflow-hidden">
+<div class="flex justify-between items-center mb-4 relative z-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center">
+<span class="material-symbols-outlined mr-2 text-[18px] text-primary">ssid_chart</span>
+                        Smart Money Volume Divergence
+                    </h3>
+<div class="flex space-x-2 bg-surface-container-highest rounded-md p-1">
+<button class="px-2 py-1 text-mono-label font-mono-label text-on-surface-variant hover:text-on-surface rounded">1H</button>
+<button class="px-2 py-1 text-mono-label font-mono-label bg-surface text-primary border border-outline-variant/30 rounded shadow-[0_2px_4px_rgba(0,0,0,0.2)]">4H</button>
+<button class="px-2 py-1 text-mono-label font-mono-label text-on-surface-variant hover:text-on-surface rounded">24H</button>
+</div>
+</div>
+<!-- Mock Area Chart -->
+<div class="flex-1 relative w-full h-full mt-2">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between">
+<div class="border-b border-outline-variant/10 w-full h-0"></div>
+<div class="border-b border-outline-variant/10 w-full h-0"></div>
+<div class="border-b border-outline-variant/10 w-full h-0"></div>
+<div class="border-b border-outline-variant/10 w-full h-0"></div>
+</div>
+<!-- Chart SVG Path (Simulated via pure CSS for standard environment) -->
+<div class="absolute bottom-0 left-0 w-full h-[80%] bg-gradient-to-t from-primary/20 to-transparent clip-path-[polygon(0_100%,0_70%,10%_80%,20%_50%,30%_60%,40%_20%,50%_40%,60%_30%,70%_50%,80%_10%,90%_30%,100%_0,100%_100%)] flex items-end">
+<div class="w-full h-full border-t-2 border-primary filter drop-shadow-[0_-5px_10px_rgba(75,226,119,0.3)]"></div>
+</div>
+<!-- Tooltip Mock -->
+<div class="absolute top-[20%] left-[80%] bg-surface-container-highest border border-outline-variant px-3 py-2 rounded shadow-xl flex flex-col z-20">
+<span class="font-mono-label text-mono-label text-on-surface-variant mb-1">14:00 UTC</span>
+<span class="font-mono-data text-mono-data text-primary">$4.2M Delta</span>
+</div>
+</div>
+</div>
+<!-- HeatMap (Holder Concentration) -->
+<div class="col-span-1 md:col-span-12 lg:col-span-4 bg-surface-container border border-outline-variant rounded-xl p-md flex flex-col h-[340px]">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Holder Concentration</h3>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-on-surface">more_horiz</span>
+</div>
+<!-- Mock Heatmap Grid -->
+<div class="flex-1 grid grid-cols-6 grid-rows-5 gap-1">
+<!-- Generating random opacities for heatmap effect using primary and secondary colors -->
+<div class="bg-primary rounded-sm opacity-20 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-40 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-10 hover:opacity-100 transition-opacity"></div>
+<div class="bg-secondary rounded-sm opacity-60 hover:opacity-100 transition-opacity"></div>
+<div class="bg-error rounded-sm opacity-80 hover:opacity-100 transition-opacity shadow-[0_0_5px_var(--tw-colors-error)]"></div>
+<div class="bg-primary rounded-sm opacity-30 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-50 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-20 hover:opacity-100 transition-opacity"></div>
+<div class="bg-secondary rounded-sm opacity-40 hover:opacity-100 transition-opacity"></div>
+<div class="bg-error rounded-sm opacity-90 hover:opacity-100 transition-opacity shadow-[0_0_8px_var(--tw-colors-error)] z-10 scale-110 border border-error"></div>
+<div class="bg-secondary rounded-sm opacity-50 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-20 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-10 hover:opacity-100 transition-opacity"></div>
+<div class="bg-secondary rounded-sm opacity-30 hover:opacity-100 transition-opacity"></div>
+<div class="bg-error rounded-sm opacity-60 hover:opacity-100 transition-opacity"></div>
+<div class="bg-error rounded-sm opacity-70 hover:opacity-100 transition-opacity"></div>
+<div class="bg-secondary rounded-sm opacity-40 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-30 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-40 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-10 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-20 hover:opacity-100 transition-opacity"></div>
+<div class="bg-secondary rounded-sm opacity-30 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-50 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-20 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-20 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-40 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-30 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-10 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-20 hover:opacity-100 transition-opacity"></div>
+<div class="bg-primary rounded-sm opacity-10 hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="mt-3 flex justify-between items-center text-mono-label font-mono-label text-on-surface-variant">
+<span>Low Risk</span>
+<div class="flex-1 mx-2 h-1 bg-gradient-to-r from-primary/20 via-secondary/50 to-error/80 rounded-full"></div>
+<span>High Trap</span>
+</div>
+</div>
+<!-- Breakdown Section (Bottom) -->
+<!-- Active List (Tokens firing signal) -->
+<div class="col-span-1 md:col-span-12 lg:col-span-8 bg-surface-container border border-outline-variant rounded-xl p-md flex flex-col min-h-[400px]">
+<div class="flex justify-between items-center mb-md border-b border-outline-variant/30 pb-3">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Active Detections</h3>
+<div class="flex items-center space-x-2 text-body-sm text-on-surface-variant bg-surface px-3 py-1 rounded border border-outline-variant/50">
+<span class="material-symbols-outlined text-[16px]">filter_list</span>
+<span>Sort: Severity</span>
+</div>
+</div>
+<!-- AnimatedList Mock Structure -->
+<div class="flex flex-col space-y-2">
+<!-- List Item 1 (Critical) -->
+<div class="grid grid-cols-12 gap-4 items-center p-3 bg-surface-container-high rounded-lg border border-error/30 hover:bg-surface-container-highest transition-colors cursor-pointer group spring-hover">
+<div class="col-span-4 flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-error/10 border border-error/50 flex items-center justify-center font-mono-data text-error">R</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">RUGD/SOL</span>
+<span class="font-mono-label text-mono-label text-on-surface-variant">0x7a...4f2b</span>
+</div>
+</div>
+<div class="col-span-3 flex flex-col">
+<span class="font-mono-label text-mono-label text-on-surface-variant">Signal Strength</span>
+<div class="w-full h-1.5 bg-surface mt-1 rounded-full overflow-hidden">
+<div class="h-full bg-error w-[95%]"></div>
+</div>
+</div>
+<div class="col-span-3 flex flex-col">
+<span class="font-mono-label text-mono-label text-on-surface-variant">Time Fired</span>
+<span class="font-mono-data text-mono-data text-on-surface">2 mins ago</span>
+</div>
+<div class="col-span-2 flex justify-end">
+<span class="bg-error/10 text-error border border-error/50 px-3 py-1 rounded shadow-[0_0_10px_rgba(255,180,171,0.2)] font-mono-label text-mono-label flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+<span>TRAP: 98</span>
+</span>
+</div>
+</div>
+<!-- List Item 2 (Warning) -->
+<div class="grid grid-cols-12 gap-4 items-center p-3 bg-surface-container-low rounded-lg border border-outline-variant/30 hover:bg-surface-container-highest transition-colors cursor-pointer group spring-hover">
+<div class="col-span-4 flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-secondary/10 border border-secondary/50 flex items-center justify-center font-mono-data text-secondary">P</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">PEPE2/SOL</span>
+<span class="font-mono-label text-mono-label text-on-surface-variant">0x3b...9a1c</span>
+</div>
+</div>
+<div class="col-span-3 flex flex-col">
+<span class="font-mono-label text-mono-label text-on-surface-variant">Signal Strength</span>
+<div class="w-full h-1.5 bg-surface mt-1 rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[72%]"></div>
+</div>
+</div>
+<div class="col-span-3 flex flex-col">
+<span class="font-mono-label text-mono-label text-on-surface-variant">Time Fired</span>
+<span class="font-mono-data text-mono-data text-on-surface">14 mins ago</span>
+</div>
+<div class="col-span-2 flex justify-end">
+<span class="bg-secondary/10 text-secondary border border-secondary/50 px-3 py-1 rounded font-mono-label text-mono-label flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">visibility</span>
+<span>TRAP: 72</span>
+</span>
+</div>
+</div>
+<!-- List Item 3 (Clear) -->
+<div class="grid grid-cols-12 gap-4 items-center p-3 bg-surface-container-low rounded-lg border border-outline-variant/30 hover:bg-surface-container-highest transition-colors cursor-pointer group spring-hover">
+<div class="col-span-4 flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 border border-primary/50 flex items-center justify-center font-mono-data text-primary">B</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">BONK/SOL</span>
+<span class="font-mono-label text-mono-label text-on-surface-variant">0x1f...8e4d</span>
+</div>
+</div>
+<div class="col-span-3 flex flex-col">
+<span class="font-mono-label text-mono-label text-on-surface-variant">Signal Strength</span>
+<div class="w-full h-1.5 bg-surface mt-1 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[35%]"></div>
+</div>
+</div>
+<div class="col-span-3 flex flex-col">
+<span class="font-mono-label text-mono-label text-on-surface-variant">Time Fired</span>
+<span class="font-mono-data text-mono-data text-on-surface">45 mins ago</span>
+</div>
+<div class="col-span-2 flex justify-end">
+<span class="bg-primary/10 text-primary border border-primary/50 px-3 py-1 rounded font-mono-label text-mono-label flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span>TRAP: 35</span>
+</span>
+</div>
+</div>
+</div>
+<button class="mt-4 w-full py-2 bg-surface-container-highest hover:bg-surface-variant text-on-surface border border-outline-variant/50 rounded-lg transition-colors font-body-sm flex justify-center items-center">
+                    View Complete Log
+                    <span class="material-symbols-outlined text-[16px] ml-1">arrow_forward</span>
+</button>
+</div>
+<!-- Explainer Accordion -->
+<div class="col-span-1 md:col-span-12 lg:col-span-4 bg-surface-container border border-outline-variant rounded-xl p-md flex flex-col">
+<div class="flex justify-between items-center mb-md border-b border-outline-variant/30 pb-3">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Signal Definitions</h3>
+<span class="material-symbols-outlined text-[20px] text-primary">book</span>
+</div>
+<div class="flex flex-col space-y-2">
+<!-- Expanded Item -->
+<div class="bg-surface-container-high border border-primary/30 rounded-lg p-3">
+<div class="flex justify-between items-center cursor-pointer mb-2">
+<h4 class="font-headline-sm text-headline-sm text-primary">Smart Money Divergence</h4>
+<span class="material-symbols-outlined text-[18px] text-primary">expand_less</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                            Detects when aggregate wallet clusters historically marked as "profitable" or "insider" exhibit buy/sell pressure that sharply contradicts the general retail trend. A high signal indicates potential institutional trapping.
+                        </p>
+</div>
+<!-- Collapsed Items -->
+<div class="bg-surface border border-outline-variant/30 rounded-lg p-3 hover:border-outline-variant transition-colors cursor-pointer group">
+<div class="flex justify-between items-center">
+<h4 class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">Insider Netflow</h4>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant/30 rounded-lg p-3 hover:border-outline-variant transition-colors cursor-pointer group">
+<div class="flex justify-between items-center">
+<h4 class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">Liquidity Fragility</h4>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant/30 rounded-lg p-3 hover:border-outline-variant transition-colors cursor-pointer group">
+<div class="flex justify-between items-center">
+<h4 class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">Holder Concentration</h4>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- 
+        ======================================================================
+        FOOTER (Generated from Shared Components JSON)
+        ======================================================================
+        -->
+<footer class="bg-surface-dim dark:bg-surface-dim mt-auto full-width bottom-0 bg-surface-container-lowest/50 backdrop-blur-sm border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center w-full px-container-margin py-lg z-20">
+<div class="flex items-center space-x-sm mb-4 md:mb-0">
+<span class="material-symbols-outlined text-[20px] text-on-surface">database</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Built on Birdeye Data</span>
+</div>
+<div class="flex space-x-lg">
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary underline-offset-4 hover:underline transition-all duration-500 ease-in-out" href="#">Documentation</a>
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary underline-offset-4 hover:underline transition-all duration-500 ease-in-out" href="#">Terms of Engagement</a>
+<a class="font-body-sm text-body-sm text-secondary dark:text-secondary hover:text-primary dark:hover:text-primary underline-offset-4 hover:underline transition-all duration-500 ease-in-out" href="#">Privacy</a>
+</div>
+<div class="hidden md:block">
+<span class="font-mono-label text-mono-label text-on-surface-variant opacity-50">SYS.VERSION.4.2.1</span>
+</div>
+</footer>
+</div>
+</body></html>
