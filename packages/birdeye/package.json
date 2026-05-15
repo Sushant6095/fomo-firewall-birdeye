@@ -1,0 +1,19 @@
+{
+  "name": "@fomo/birdeye",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx src/__tests__/run.ts"
+  },
+  "dependencies": {
+    "@fomo/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@fomo/scoring",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "tsx src/__tests__/run.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fomo/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}
