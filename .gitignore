@@ -1,0 +1,36 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build output
+.next
+dist
+build
+out
+*.tsbuildinfo
+
+# Env / secrets — NEVER commit these
+.env
+.env.local
+.env.*.local
+
+# OS / editor
+.DS_Store
+*.log
+.vscode
+.idea
+
+# Vercel / cloud
+.vercel
+.supabase
+
+# Internal — not for public repo
+prompts/
+CLAUDE.md
+.claude/
+
+# Obsidian workspace artifacts (folder may live inside an Obsidian vault)
+.obsidian/
+Untitled*.canvas
+Untitled*.base
+[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md
