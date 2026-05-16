@@ -14,6 +14,14 @@
 
 ---
 
+### 🚀 One-click deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSushant6095%2Ffomo-firewall-birdeye&env=FOMO_DEMO_MODE,BIRDEYE_API_KEY,BIRDEYE_RPS,FOMO_TRENDING_LIMIT&envDescription=Demo%20mode%20%3D%20rich%20fixtures%2C%20no%20Birdeye%20account%20needed.%20Set%20FOMO_DEMO_MODE%3D1%20OR%20provide%20a%20free-tier%20Birdeye%20key%20for%20live%20data.&envLink=https%3A%2F%2Fdocs.birdeye.so%2Fdocs%2Fauthentication-api-keys&project-name=fomo-firewall&repository-name=fomo-firewall-birdeye)
+
+Click → Vercel forks the repo to your GitHub, asks for 4 env vars (all optional — empty defaults work), deploys in ~2 minutes. **See [Deploying on Vercel](#deploying-on-vercel) below for the full guide.**
+
+---
+
 > **Every other Solana tool answers: *"What should I buy?"***
 > **FOMO Firewall answers: *"Should I _not_ be buying?"***
 
@@ -391,6 +399,92 @@ Concrete, file-level enforcement — not just convention:
 - **All Birdeye calls run server-side**, rate-limited, retried.
 - **No wallet connection. No trading. No financial advice.**
 - **Every score must be explainable** with reasons and evidence pinned to the originating Birdeye endpoint.
+
+---
+
+## Deploying on Vercel
+
+### One-click (recommended path)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSushant6095%2Ffomo-firewall-birdeye&env=FOMO_DEMO_MODE,BIRDEYE_API_KEY,BIRDEYE_RPS,FOMO_TRENDING_LIMIT&envDescription=Demo%20mode%20%3D%20rich%20fixtures%2C%20no%20Birdeye%20account%20needed.%20Set%20FOMO_DEMO_MODE%3D1%20OR%20provide%20a%20free-tier%20Birdeye%20key%20for%20live%20data.&envLink=https%3A%2F%2Fdocs.birdeye.so%2Fdocs%2Fauthentication-api-keys&project-name=fomo-firewall&repository-name=fomo-firewall-birdeye)
+
+What happens when you click the button:
+
+1. Vercel asks you to authorize the Vercel ↔ GitHub integration (one-time)
+2. Vercel forks `Sushant6095/fomo-firewall-birdeye` into your own GitHub
+3. Vercel reads [vercel.json](vercel.json) at repo root and auto-configures:
+   - **Framework:** Next.js (auto-detected)
+   - **Install command:** `pnpm install --frozen-lockfile=false` (workspace-aware)
+   - **Build command:** `pnpm --filter @fomo/web build`
+   - **Output directory:** `apps/web/.next`
+   - **Region:** `iad1` (US East — closest to Birdeye API origin)
+   - **Function timeouts:** 60s for `/api/worker/run`, `/api/source/status`, `/api/tokens/trending-risk`; 30s for the rest
+   - **Cron:** `/api/worker/run` runs every 15 minutes (Pro plan only)
+4. Vercel prompts you for 4 env vars — **all 4 are optional**, leave them blank for instant demo mode
+5. Vercel builds + deploys → live URL in ~90 seconds
+
+### Environment variables (Vercel UI)
+
+| Var | Required? | Demo value | Live-mode value | Notes |
+|---|---|---|---|---|
+| `FOMO_DEMO_MODE` | No (default off) | `1` | empty | Forces fixture-only data — bypasses Birdeye entirely. **Set this for a working demo without a Birdeye account** |
+| `BIRDEYE_API_KEY` | Only for live mode | empty | your key | Get a free key at [docs.birdeye.so](https://docs.birdeye.so/docs/authentication-api-keys). 60 rpm free-tier is supported |
+| `BIRDEYE_RPS` | No (default `0.9`) | — | `0.9` | Rate-limit cap. Stays strictly under 60 rpm to leave headroom for retries |
+| `FOMO_TRENDING_LIMIT` | No (default `8`) | — | `8` | Tokens fetched per ingestion cycle. 8 × ~5 endpoints ≈ 33 calls ≈ 37s — within Vercel Pro's 60s function timeout |
+
+> **For a no-config demo deploy**, fill in only `FOMO_DEMO_MODE=1`. The app renders all 5 pages with rich fixture data instantly. Add a Birdeye key later in the Vercel project settings to flip to live mode without a redeploy.
+
+### Plan tier considerations
+
+| Plan | Ingestion mode | What works |
+|---|---|---|
+| **Hobby** (free) | `FOMO_DEMO_MODE=1` required | ✅ All 5 pages + APIs serve fixture data. Live ingestion (45s) exceeds the 10s function timeout |
+| **Pro** | Either demo or live | ✅ Live ingestion runs in 45s (well under Pro's 60s function timeout). Cron job hits `/api/worker/run` every 15 min to keep the DB warm |
+| **Enterprise** | Live + custom regions | ✅ Pin to a region closer to Birdeye, raise function timeout to 300s |
+
+### Known limitations on serverless
+
+The current `FomoDb` implementation is **in-memory** (a `Map` on `globalThis`). On Vercel each lambda invocation can hit a fresh container, so:
+
+- Watchlist mutations (`POST /api/watchlist`) don't persist across requests
+- Score data ingested in one lambda isn't visible to another
+- The LIVE/DEMO badge may flicker as different lambdas warm up
+
+**This is acceptable for the demo deploy** because:
+- Demo mode pre-seeds every lambda with the same fixtures on first request (instant, deterministic)
+- The cron job on Pro keeps the DB warm with fresh Birdeye data every 15 minutes
+- Real persistence requires the Supabase driver (interface is in [packages/db](packages/db); impl is the next milestone)
+
+For production: deploy the worker as a long-running process (Fly.io, Railway, Render) + swap `FomoDb` to a Supabase impl. The web app then becomes a pure read-and-mutate frontend.
+
+### Manual setup (if the one-click button doesn't fit)
+
+```bash
+# 1. Clone
+git clone https://github.com/Sushant6095/fomo-firewall-birdeye.git
+cd fomo-firewall-birdeye
+
+# 2. Install Vercel CLI + login
+npm i -g vercel
+vercel login
+
+# 3. Link to a new Vercel project (vercel.json is auto-detected)
+vercel link
+
+# 4. Push env vars (FOMO_DEMO_MODE for demo, or BIRDEYE_API_KEY for live)
+vercel env add FOMO_DEMO_MODE production
+# → paste: 1
+
+# 5. Deploy
+vercel --prod
+```
+
+### After deploy
+
+- Open the live URL Vercel gives you (e.g. `https://fomo-firewall-<hash>.vercel.app`)
+- Click the green **LIVE / DEMO** pill in the top-right of the dashboard → confirms which mode you're in
+- For live mode: paste a real Solana mint into Cmd-K → the case file will populate with current Birdeye data
+- For demo mode: the marquee shows the 4 fixture tokens (`$DOGX`, `$MOONX`, `$NOVA`, `$JITO`)
 
 ---
 
