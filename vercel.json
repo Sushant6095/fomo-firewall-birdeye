@@ -3,7 +3,7 @@
   "framework": "nextjs",
   "buildCommand": "pnpm --filter @fomo/web build",
   "installCommand": "pnpm install --frozen-lockfile=false",
-  "outputDirectory": "apps/web/.next",
+  "outputDirectory": ".next",
   "git": {
     "deploymentEnabled": {
       "main": true
@@ -11,19 +11,19 @@
   },
   "regions": ["iad1"],
   "functions": {
-    "apps/web/app/api/worker/run/route.ts": {
+    "app/api/worker/run/route.ts": {
       "maxDuration": 60
     },
-    "apps/web/app/api/source/status/route.ts": {
+    "app/api/source/status/route.ts": {
       "maxDuration": 60
     },
-    "apps/web/app/api/tokens/trending-risk/route.ts": {
+    "app/api/tokens/trending-risk/route.ts": {
       "maxDuration": 60
     },
-    "apps/web/app/api/alerts/recent/route.ts": {
+    "app/api/alerts/recent/route.ts": {
       "maxDuration": 30
     },
-    "apps/web/app/api/token/[address]/score/route.ts": {
+    "app/api/token/[address]/score/route.ts": {
       "maxDuration": 30
     }
   },
