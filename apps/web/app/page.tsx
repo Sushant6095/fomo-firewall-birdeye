@@ -9,6 +9,7 @@ import {
   HomeHowItWorks,
   HomeStatsRow
 } from "./_components/home-hero";
+import { HomeChannelsCTA } from "./_components/home-channels-cta";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 15;
@@ -119,6 +120,9 @@ export default async function TerminalHomePage() {
           How it works
         </h3>
         <HomeHowItWorks />
+
+        {/* Three delivery surfaces — Web / Telegram / Extension */}
+        <HomeChannelsCTA />
 
         {/* Status line */}
         <div className="mt-xl flex flex-wrap items-center justify-between gap-md rounded-2xl border border-outline-variant/20 bg-surface-container-lowest p-5">
