@@ -149,6 +149,10 @@ export function createMemoryDb(): FomoDb {
       return Array.from(watchByToken.get(address) ?? []);
     },
 
+    async listWatches(chatId) {
+      return Array.from(watchByChat.get(chatId) ?? []);
+    },
+
     async startRun() {
       runSeq += 1;
       const id = `run_${String(runSeq).padStart(4, "0")}`;

@@ -20,15 +20,27 @@ export async function GET(
   const { address } = await context.params;
   const stored = await getLatestStoredScore(address);
   if (stored) {
+    const s = stored.snapshot;
     return NextResponse.json(
       {
         address: stored.tokenAddress,
         symbol: stored.symbol,
+        name: stored.name,
         trapScore: stored.trapScore,
         verdict: stored.verdict,
         reasons: stored.reasons,
         warnings: stored.warnings,
         analystSummary: stored.analystSummary,
+        // Per-snapshot metrics — required by the bot's /score reply,
+        // extension overlay, and case-file deep view. Without these the
+        // bot can only render a TrapScore number with no supporting data.
+        priceChange1h: s.priceChange1h,
+        volume1hUsd: s.volume1hUsd,
+        liquidityUsd: s.liquidityUsd,
+        liquidityChange1h: s.liquidityChange1h,
+        smartWalletNetflowUsd: s.smartWalletBuyUsd - s.smartWalletSellUsd,
+        insiderNetflowUsd: s.insiderBuyUsd - s.insiderSellUsd,
+        top10HolderPercent: s.top10HolderPercent,
         scoredAt: stored.scoredAt,
         source: "db"
       },
@@ -44,6 +56,7 @@ export async function GET(
       {
         address: fixture.address,
         symbol: fixture.symbol,
+        name: fixture.name,
         trapScore: fixture.trapScore,
         verdict: fixture.verdict,
         // Normalize fixture reasons (string[]) to the same
@@ -56,6 +69,13 @@ export async function GET(
         })),
         evidence: fixture.evidence,
         analystSummary: fixture.analystSummary,
+        priceChange1h: fixture.priceChange1h,
+        volume1hUsd: fixture.volume1hUsd,
+        liquidityUsd: fixture.liquidityUsd,
+        liquidityChange1h: fixture.liquidityChange1h,
+        smartWalletNetflowUsd: fixture.smartWalletNetflowUsd,
+        insiderNetflowUsd: fixture.insiderNetflowUsd,
+        top10HolderPercent: fixture.top10HolderPercent,
         scoredAt: new Date().toISOString(),
         source: "fixture"
       },

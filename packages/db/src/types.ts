@@ -49,6 +49,7 @@ export interface FomoDb {
   addWatch(chatId: string, address: string): Promise<void>;
   removeWatch(chatId: string, address: string): Promise<void>;
   listSubscribersFor(address: string): Promise<string[]>;
+  listWatches(chatId: string): Promise<string[]>;
 
   // Ingestion runs
   startRun(): Promise<string>;
