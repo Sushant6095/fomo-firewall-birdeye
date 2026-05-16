@@ -20,12 +20,23 @@ export async function handleScoreCommand(arg: string): Promise<string> {
   if (!resp) {
     return `No FOMO Firewall snapshot yet for ${address}. Try a token from the dashboard's Risk Board.`;
   }
+  // Be defensive — older fixture data returned reasons as string[] while
+  // DB data returns {code, message, contribution}[]. Accept either shape.
+  const reasonStrings = (resp.reasons as unknown[])
+    .slice(0, 3)
+    .map((r) =>
+      typeof r === "string"
+        ? r
+        : (r as { message?: string }).message ?? ""
+    )
+    .filter((s) => s.length > 0);
+
   return formatTrapAlert({
     symbol: resp.symbol,
     address: resp.address,
     trapScore: resp.trapScore,
     verdict: resp.verdict as Parameters<typeof formatTrapAlert>[0]["verdict"],
-    reasons: resp.reasons.slice(0, 3).map((r) => r.message),
+    reasons: reasonStrings,
     caseFileUrl: caseFileUrl(resp.address)
   });
 }

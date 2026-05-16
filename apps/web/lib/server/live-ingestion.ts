@@ -34,6 +34,9 @@ let runInFlight: Promise<LiveRunSummary> | null = null;
 let lastSummary: LiveRunSummary | null = null;
 
 export function hasBirdeyeKey(): boolean {
+  // FOMO_DEMO_MODE=1 forces fixture-only seeding even when the key is set.
+  // Useful for fast local testing without burning the Birdeye rpm budget.
+  if (process.env.FOMO_DEMO_MODE === "1") return false;
   return Boolean(process.env.BIRDEYE_API_KEY);
 }
 

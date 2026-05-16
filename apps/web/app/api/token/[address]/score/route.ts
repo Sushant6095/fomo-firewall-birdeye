@@ -46,7 +46,14 @@ export async function GET(
         symbol: fixture.symbol,
         trapScore: fixture.trapScore,
         verdict: fixture.verdict,
-        reasons: fixture.reasons,
+        // Normalize fixture reasons (string[]) to the same
+        // {code, message, contribution} object shape the DB branch uses,
+        // so the bot, extension, and dashboard never have to handle two shapes.
+        reasons: fixture.reasons.map((message, i) => ({
+          code: `FIXTURE_REASON_${i + 1}`,
+          message,
+          contribution: 0
+        })),
         evidence: fixture.evidence,
         analystSummary: fixture.analystSummary,
         scoredAt: new Date().toISOString(),
