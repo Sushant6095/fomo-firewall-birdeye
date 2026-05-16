@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "FOMO Firewall",
-  "short_name": "FOMO Firewall",
+  "short_name": "Firewall",
   "version": "1.0.0",
-  "description": "Solana exit-liquidity intelligence. TrapScore reveals when smart wallets, insiders, or top holders are using retail FOMO as exit liquidity.",
+  "description": "Solana exit-liquidity intelligence. See when smart wallets, insiders, and top holders are using retail FOMO as exit liquidity.",
   "author": "Sushant Jain",
   "homepage_url": "https://github.com/Sushant6095/fomo-firewall-birdeye",
   "icons": {

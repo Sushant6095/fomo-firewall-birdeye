@@ -38,6 +38,25 @@ if (missing.length > 0) {
   missing.forEach(([k]) => console.error(`    - ${k}`));
   process.exit(1);
 }
+
+// CWS hard limit: description ≤ 132 chars.
+if (typeof manifest.description === "string" && manifest.description.length > 132) {
+  console.error(
+    `✗ manifest.description is ${manifest.description.length} chars (max 132 on Chrome Web Store). Shorten it in manifest.json and rebuild.`
+  );
+  process.exit(1);
+}
+// CWS limit: name ≤ 75 chars, short_name ≤ 12 chars.
+if (typeof manifest.name === "string" && manifest.name.length > 75) {
+  console.error(`✗ manifest.name is ${manifest.name.length} chars (max 75).`);
+  process.exit(1);
+}
+if (typeof manifest.short_name === "string" && manifest.short_name.length > 12) {
+  console.error(
+    `✗ manifest.short_name is ${manifest.short_name.length} chars (max 12).`
+  );
+  process.exit(1);
+}
 if (
   Array.isArray(manifest.host_permissions) &&
   manifest.host_permissions.some((h) => /localhost|127\.0\.0\.1/.test(h))
