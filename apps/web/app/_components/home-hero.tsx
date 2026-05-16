@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ClipboardPaste, Radar, TrendingDown, Users, Droplets, Activity, ShieldAlert, Waves, AlertOctagon } from "lucide-react";
+import { ClipboardPaste, Radar, TrendingDown, Users, Droplets, Activity, ShieldAlert, Waves, AlertOctagon, ArrowRight } from "lucide-react";
 import { useCmdK } from "./cmdk-context";
 import { ShimmerButton } from "./ui/shimmer-button";
 import {
@@ -80,18 +80,53 @@ export function HomeHero({
       <Ripple mainCircleSize={120} mainCircleOpacity={0.18} numCircles={6} />
 
       <BlurFade className="relative z-10 w-full" delay={0.1}>
-        <ShineBorder borderRadius={9999} borderWidth={1} duration={10} color={["#34D399", "#10B981", "#F59E0B"]} className="mx-auto mb-8 px-4 py-1">
-          <span className="font-mono-label text-mono-label inline-flex items-center gap-2 text-on-surface-variant">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-error" />
-            Monitoring{" "}
-            <span className="font-mono-data text-on-surface">
-              <NumberTicker value={monitoredCount} />
-            </span>{" "}
-            tokens ·{" "}
-            <span className="text-error">
-              <NumberTicker value={criticalCount} className="text-error" /> critical
+        <ShineBorder
+          borderRadius={9999}
+          borderWidth={1}
+          duration={8}
+          color={["#10B981", "#34D399", "#10B981"]}
+          className="mx-auto mb-8"
+        >
+          <Link
+            href="/board"
+            className="group flex items-center gap-3 rounded-full bg-surface-container-low/80 px-5 py-2.5 backdrop-blur-md transition-colors hover:bg-surface-container"
+            aria-label="View Threat Board"
+          >
+            <span className="relative flex h-2 w-2" aria-hidden>
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-70" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
             </span>
-          </span>
+
+            <span className="font-mono-label rounded-md border border-success/30 bg-success/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-success">
+              Live
+            </span>
+
+            <span className="h-3.5 w-px bg-outline-variant/40" aria-hidden />
+
+            <span className="font-mono-label flex items-center gap-2 text-[13px]">
+              <NumberTicker
+                value={monitoredCount}
+                className="font-mono-data text-base font-bold text-on-surface"
+              />
+              <span className="text-on-surface-variant">tokens monitored</span>
+              <span className="text-on-surface-variant/40">·</span>
+              <NumberTicker
+                value={criticalCount}
+                className={`font-mono-data text-base font-bold ${
+                  criticalCount > 0 ? "text-error" : "text-on-surface"
+                }`}
+              />
+              <span
+                className={
+                  criticalCount > 0 ? "text-error" : "text-on-surface-variant"
+                }
+              >
+                critical
+              </span>
+            </span>
+
+            <ArrowRight className="h-3.5 w-3.5 text-on-surface-variant transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-on-surface" />
+          </Link>
         </ShineBorder>
       </BlurFade>
 

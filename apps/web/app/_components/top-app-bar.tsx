@@ -9,7 +9,8 @@ import {
   LayoutDashboard,
   Shield,
   Activity,
-  Bell
+  Bell,
+  BookOpen
 } from "lucide-react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useCmdK } from "./cmdk-context";
@@ -22,7 +23,8 @@ const NAV_LINKS: TubelightItem[] = [
   { name: "Dashboard", url: "/", icon: <LayoutDashboard className="h-4 w-4" /> },
   { name: "Board", url: "/board", icon: <Shield className="h-4 w-4" /> },
   { name: "Signals", url: "/signals", icon: <Activity className="h-4 w-4" /> },
-  { name: "Alerts", url: "/alerts", icon: <Bell className="h-4 w-4" /> }
+  { name: "Alerts", url: "/alerts", icon: <Bell className="h-4 w-4" /> },
+  { name: "Docs", url: "/docs", icon: <BookOpen className="h-4 w-4" /> }
 ];
 
 export function TopAppBar() {

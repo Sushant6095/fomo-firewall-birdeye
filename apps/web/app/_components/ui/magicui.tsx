@@ -759,28 +759,38 @@ export function ShineBorder({
   children: React.ReactNode;
 }) {
   const colors = Array.isArray(color) ? color : [color];
+  // Inline-style the mask so Tailwind's arbitrary-value parser can't mangle
+  // the comma-separated mask layers, and so we can ship both -webkit- and
+  // standard properties. Without these, Chromium fills the whole pill with
+  // the gradient and the children become invisible.
+  const beforeStyle: React.CSSProperties = {
+    background: `linear-gradient(${colors.join(",")}) border-box`,
+    backgroundSize: "300% 300%",
+    WebkitMask:
+      "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+    WebkitMaskComposite: "xor",
+    mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+    maskComposite: "exclude"
+  };
   return (
     <div
       style={
         {
           "--border-radius": `${borderRadius}px`,
           "--border-width": `${borderWidth}px`,
-          "--duration": `${duration}s`,
-          "--color": colors.join(",")
+          "--duration": `${duration}s`
         } as React.CSSProperties
       }
       className={cx(
         "relative grid min-h-[40px] w-fit min-w-[40px] place-items-center rounded-[var(--border-radius)] bg-transparent text-on-surface",
-        "before:absolute before:inset-0 before:rounded-[var(--border-radius)] before:p-[var(--border-width)]",
-        "before:[background:linear-gradient(var(--color))_border-box]",
-        "before:[background-size:300%_300%]",
-        "before:animate-shine",
-        "before:[mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]",
-        "before:[mask-composite:exclude]",
-        "before:pointer-events-none",
         className
       )}
     >
+      <span
+        aria-hidden
+        style={beforeStyle}
+        className="pointer-events-none absolute inset-0 animate-shine rounded-[var(--border-radius)] p-[var(--border-width)]"
+      />
       {children}
     </div>
   );
