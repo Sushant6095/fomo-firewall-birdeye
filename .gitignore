@@ -34,3 +34,7 @@ CLAUDE.md
 Untitled*.canvas
 Untitled*.base
 [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md
+
+# Extension build artifacts
+apps/extension/src/icons/
+apps/extension/fomo-firewall-extension-v*.zip

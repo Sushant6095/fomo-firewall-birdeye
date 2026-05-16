@@ -21,6 +21,15 @@ const watch = process.argv.includes("--watch");
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 
+// Production API base URL — what the extension calls in the wild.
+// Override at build time:  EXTENSION_API_BASE_URL=https://your-domain pnpm build
+// Default points at the canonical Vercel deployment.
+const API_BASE_URL =
+  process.env.EXTENSION_API_BASE_URL ??
+  (watch
+    ? "http://localhost:8727"
+    : "https://fomo-firewall-birdeye.vercel.app");
+
 const shared = {
   bundle: true,
   format: "iife",
@@ -29,7 +38,8 @@ const shared = {
   sourcemap: watch,
   minify: !watch,
   define: {
-    "process.env.NODE_ENV": JSON.stringify(watch ? "development" : "production")
+    "process.env.NODE_ENV": JSON.stringify(watch ? "development" : "production"),
+    "process.env.EXTENSION_API_BASE_URL": JSON.stringify(API_BASE_URL)
   },
   loader: { ".css": "css" }
 };
@@ -57,7 +67,12 @@ async function copyStatic() {
   await cp(resolve(root, "manifest.json"), resolve(dist, "manifest.json"));
   await cp(resolve(root, "popup.html"), resolve(dist, "popup.html"));
   await cp(resolve(root, "src/styles.css"), resolve(dist, "styles.css"));
-  if (existsSync(resolve(root, "icons"))) {
+  // Icons live in src/icons (rendered by scripts/generate-icons.mjs from
+  // the Pulse Shield SVG). Manifest references icons/*.png — copy them in.
+  const iconSrc = resolve(root, "src/icons");
+  if (existsSync(iconSrc)) {
+    await cp(iconSrc, resolve(dist, "icons"), { recursive: true });
+  } else if (existsSync(resolve(root, "icons"))) {
     await cp(resolve(root, "icons"), resolve(dist, "icons"), { recursive: true });
   }
 }

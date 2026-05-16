@@ -21,10 +21,13 @@ const DEMO_TOKEN: TokenRiskFixture = CRITICAL_TRAP_TOKEN;
 
 function backendUrl(): string {
   // Extension MUST NOT call Birdeye directly. Only the FOMO Firewall backend.
+  // Injected at build time by esbuild's `define` from build.mjs:
+  //   pnpm build → https://fomo-firewall-birdeye.vercel.app
+  //   pnpm dev   → http://localhost:8727
   return (
     (typeof process !== "undefined" &&
       process.env?.EXTENSION_API_BASE_URL) ||
-    "http://localhost:3000"
+    "https://fomo-firewall-birdeye.vercel.app"
   );
 }
 

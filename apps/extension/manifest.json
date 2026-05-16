@@ -2,8 +2,16 @@
   "manifest_version": 3,
   "name": "FOMO Firewall",
   "short_name": "FOMO Firewall",
-  "version": "0.1.0",
-  "description": "Check Solana token pumps for exit-liquidity risk. TrapScore reveals when smart wallets, insiders, or top holders are using retail as exit liquidity.",
+  "version": "1.0.0",
+  "description": "Solana exit-liquidity intelligence. TrapScore reveals when smart wallets, insiders, or top holders are using retail FOMO as exit liquidity.",
+  "author": "Sushant Jain",
+  "homepage_url": "https://github.com/Sushant6095/fomo-firewall-birdeye",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
   "permissions": ["activeTab", "storage"],
   "host_permissions": [
     "https://birdeye.so/*",
@@ -12,11 +20,17 @@
     "https://solscan.io/*",
     "https://pump.fun/*",
     "https://jup.ag/*",
-    "http://localhost:3000/*"
+    "https://fomo-firewall-birdeye.vercel.app/*"
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "FOMO Firewall — TrapScore"
+    "default_title": "FOMO Firewall — TrapScore",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
   },
   "background": {
     "service_worker": "background.js"
@@ -38,7 +52,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["styles.css"],
+      "resources": ["styles.css", "icons/*.png"],
       "matches": ["<all_urls>"]
     }
   ]

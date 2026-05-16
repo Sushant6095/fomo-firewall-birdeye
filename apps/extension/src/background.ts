@@ -11,7 +11,14 @@
  *  - All risk scoring happens server-side; we only proxy intents.
  */
 
-const BACKEND_URL = "http://localhost:3000";
+// Injected at build time by esbuild's `define` (see build.mjs).
+// pnpm build       → https://fomo-firewall-birdeye.vercel.app
+// pnpm dev         → http://localhost:8727
+// EXTENSION_API_BASE_URL=… pnpm build → custom override
+declare const process: { env: { EXTENSION_API_BASE_URL?: string } };
+const BACKEND_URL =
+  (typeof process !== "undefined" && process.env?.EXTENSION_API_BASE_URL) ||
+  "https://fomo-firewall-birdeye.vercel.app";
 
 chrome.runtime.onInstalled.addListener(() => {
   console.log("[FOMO Firewall] extension installed");

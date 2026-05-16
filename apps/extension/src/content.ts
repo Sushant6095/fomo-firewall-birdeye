@@ -16,7 +16,11 @@ import { buildBadgeMarkup, type BadgeState } from "./components/detected-token-b
 
 const SOLANA_ADDRESS_RE = /[1-9A-HJ-NP-Za-km-z]{32,44}/g;
 const BADGE_ID = "ff-badge-root";
-const BACKEND_URL = "http://localhost:3000";
+// Injected at build time by esbuild's `define` (see build.mjs).
+declare const process: { env: { EXTENSION_API_BASE_URL?: string } };
+const BACKEND_URL =
+  (typeof process !== "undefined" && process.env?.EXTENSION_API_BASE_URL) ||
+  "https://fomo-firewall-birdeye.vercel.app";
 
 type ScoreResponse = {
   address: string;
