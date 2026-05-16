@@ -182,25 +182,20 @@ export function HomeChannelsCTA() {
                 <code className="rounded bg-surface-container-high px-1.5 py-0.5">pump.fun</code>
                 <code className="rounded bg-surface-container-high px-1.5 py-0.5">jup.ag</code>
               </div>
-              <button
-                type="button"
+              <InteractiveHoverButton
                 onClick={copyExtensionInstall}
-                className="mt-auto w-full"
+                accent="tertiary"
+                icon={
+                  copied ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )
+                }
+                className="mt-auto !w-full !justify-center"
               >
-                <InteractiveHoverButton
-                  accent="tertiary"
-                  icon={
-                    copied ? (
-                      <Check className="h-4 w-4" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )
-                  }
-                  className="!w-full !justify-center"
-                >
-                  {copied ? "Copied install commands" : "Copy install commands"}
-                </InteractiveHoverButton>
-              </button>
+                {copied ? "Copied install commands" : "Copy install commands"}
+              </InteractiveHoverButton>
               <Link
                 href="https://github.com/Sushant6095/fomo-firewall-birdeye/tree/main/apps/extension"
                 target="_blank"

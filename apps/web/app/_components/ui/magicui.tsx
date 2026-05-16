@@ -395,7 +395,7 @@ export function AnimatedBeam({
   toRef,
   curvature = 0,
   reverse = false,
-  duration = Math.random() * 3 + 4,
+  duration = 5,
   delay = 0,
   pathColor = "#52525b",
   pathWidth = 2,
@@ -498,18 +498,30 @@ export function AnimatedBeam({
  * 8. Meteors — falling diagonal streaks for hero
  * ────────────────────────────────────────────────────────────────────── */
 export function Meteors({ number = 20 }: { number?: number }) {
+  // Math.random() must run client-only — otherwise SSR generates one set
+  // of values and hydration generates another, producing a mismatch.
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+
   const items = React.useMemo(
     () =>
-      Array.from({ length: number }, (_, i) => ({
-        id: i,
-        left: Math.floor(Math.random() * 100),
-        delay: Math.random() * 3,
-        duration: 4 + Math.random() * 6
-      })),
-    [number]
+      mounted
+        ? Array.from({ length: number }, (_, i) => ({
+            id: i,
+            left: Math.floor(Math.random() * 100),
+            delay: Math.random() * 3,
+            duration: 4 + Math.random() * 6
+          }))
+        : [],
+    [number, mounted]
   );
+
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      aria-hidden
+      suppressHydrationWarning
+    >
       {items.map((m) => (
         <span
           key={m.id}
@@ -943,18 +955,25 @@ export function AnimatedGridPattern({
   numSquares?: number;
 }) {
   const id = React.useId();
+  // Math.random() must be client-only for SSR/hydration consistency.
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+
   const squares = React.useMemo(
     () =>
-      Array.from({ length: numSquares }, () => ({
-        x: Math.floor(Math.random() * 30),
-        y: Math.floor(Math.random() * 30),
-        delay: Math.random() * 6
-      })),
-    [numSquares]
+      mounted
+        ? Array.from({ length: numSquares }, () => ({
+            x: Math.floor(Math.random() * 30),
+            y: Math.floor(Math.random() * 30),
+            delay: Math.random() * 6
+          }))
+        : [],
+    [numSquares, mounted]
   );
   return (
     <svg
       aria-hidden="true"
+      suppressHydrationWarning
       className={cx(
         "pointer-events-none absolute inset-0 h-full w-full fill-transparent stroke-on-surface-variant/10",
         className

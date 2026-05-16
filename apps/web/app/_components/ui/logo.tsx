@@ -216,7 +216,7 @@ export function LogoPulse({ size = 32, className = "", glow = false }: LogoProps
       </g>
 
       {/* Sweeping radar wedge (animated rotation) */}
-      <g transform-origin="128 128">
+      <g style={{ transformOrigin: "128px 128px" }}>
         <path
           d="M128 128 L128 12 A116 116 0 0 1 232 96 Z"
           fill={`url(#${gStroke})`}
