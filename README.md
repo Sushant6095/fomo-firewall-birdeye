@@ -419,7 +419,7 @@ What happens when you click the button:
    - **Output directory:** `apps/web/.next`
    - **Region:** `iad1` (US East — closest to Birdeye API origin)
    - **Function timeouts:** 60s for `/api/worker/run`, `/api/source/status`, `/api/tokens/trending-risk`; 30s for the rest
-   - **Cron:** `/api/worker/run` runs every 15 minutes (Pro plan only)
+   - **Cron:** `/api/worker/run` runs daily at 12:00 UTC (Hobby-compatible). Pro users can change to `*/15 * * * *` for 15-min refreshes
 4. Vercel prompts you for 4 env vars — **all 4 are optional**, leave them blank for instant demo mode
 5. Vercel builds + deploys → live URL in ~90 seconds
 
@@ -439,7 +439,7 @@ What happens when you click the button:
 | Plan | Ingestion mode | What works |
 |---|---|---|
 | **Hobby** (free) | `FOMO_DEMO_MODE=1` required | ✅ All 5 pages + APIs serve fixture data. Live ingestion (45s) exceeds the 10s function timeout |
-| **Pro** | Either demo or live | ✅ Live ingestion runs in 45s (well under Pro's 60s function timeout). Cron job hits `/api/worker/run` every 15 min to keep the DB warm |
+| **Pro** | Either demo or live | ✅ Live ingestion runs in 45s (well under Pro's 60s function timeout). Bump cron to `*/15 * * * *` in `vercel.json` for 15-min refreshes (Hobby is capped at daily) |
 | **Enterprise** | Live + custom regions | ✅ Pin to a region closer to Birdeye, raise function timeout to 300s |
 
 ### Known limitations on serverless

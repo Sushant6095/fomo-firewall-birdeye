@@ -30,7 +30,7 @@
   "crons": [
     {
       "path": "/api/worker/run",
-      "schedule": "*/15 * * * *"
+      "schedule": "0 12 * * *"
     }
   ],
   "headers": [

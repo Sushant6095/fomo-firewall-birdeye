@@ -33,11 +33,21 @@ Plus per-route function timeouts (Pro plan):
 | `/api/token/[address]/score` | 30s |
 | All others | 10s (Vercel default) |
 
-Plus a cron job (Pro plan) that hits `/api/worker/run` every 15 minutes to keep the in-memory DB warm with fresh Birdeye data:
+Plus a cron job that hits `/api/worker/run` daily at noon UTC. The daily schedule is the **Hobby-tier cap** (one fire per day); Pro users should bump it to `*/15 * * * *` for 15-min refreshes:
 
 ```json
-"crons": [{ "path": "/api/worker/run", "schedule": "*/15 * * * *" }]
+"crons": [{ "path": "/api/worker/run", "schedule": "0 12 * * *" }]
 ```
+
+### Cron schedule by plan
+
+| Plan | Max frequency | Recommended schedule |
+|---|---|---|
+| **Hobby** | Once per day | `0 12 * * *` (noon UTC — current default) |
+| **Pro** | Unlimited | `*/15 * * * *` (every 15 min — keeps DB warm with fresh Birdeye data) |
+| **Enterprise** | Unlimited | `*/5 * * * *` (every 5 min if you want near-real-time) |
+
+Edit `vercel.json` → `crons[0].schedule` → commit → push. Vercel re-reads on next deploy.
 
 ## Environment variables
 
@@ -73,7 +83,7 @@ Plus a cron job (Pro plan) that hits `/api/worker/run` every 15 minutes to keep 
 | Max function duration | 10s | 60s (configurable to 300s in `vercel.json`) | 900s |
 | Demo mode | ✅ Instant | ✅ Instant | ✅ Instant |
 | Live Birdeye ingestion (~45s) | ❌ Times out | ✅ Works | ✅ Works |
-| Cron jobs | ❌ Not available | ✅ Every 15 min via `vercel.json` | ✅ |
+| Cron jobs | ✅ Daily only (`0 12 * * *` default) | ✅ Up to every 15 min — change schedule in `vercel.json` | ✅ Unlimited |
 | Recommended for | Showcase / portfolio demo | Live demo / staging | Production with custom regions |
 
 ## Step-by-step manual deploy
@@ -135,7 +145,8 @@ vercel --prod
 | LIVE pill shows DEMO even with `BIRDEYE_API_KEY` set | Cold-start ingestion still in progress | Wait 60s and reload, or check `/api/source/status` directly |
 | Build fails: `Cannot find module '@fomo/birdeye'` | Vercel ran `npm install` instead of `pnpm install` | Confirm `installCommand` in `vercel.json` is intact. Vercel auto-detects pnpm from `pnpm-lock.yaml` |
 | Build fails: `tsc` errors in `packages/*` | Vercel doesn't build workspace deps | `pnpm --filter @fomo/web build` cascades through workspace deps via Turbo. Make sure root `package.json` has `"packageManager": "pnpm@..."` |
-| Cron not firing | Hobby plan (cron is Pro-only) | Upgrade or hit `/api/worker/run` manually via a curl + uptime-monitor on Pingdom/Cronitor |
+| `Hobby accounts are limited to daily cron jobs` build error | Cron schedule fires more than once per day | Hobby is capped at daily. Default is `0 12 * * *`. To fire more often, upgrade to Pro and change the schedule in `vercel.json` |
+| Cron not firing on schedule | Cron is set up in vercel.json but Vercel needs a deploy to register it | Push any commit. Vercel re-registers crons on every deployment. Verify in Vercel dashboard → Settings → Cron Jobs |
 
 ## Cost expectations
 
