@@ -1075,7 +1075,10 @@ export function WordRotate({
 }: {
   words: string[];
   duration?: number;
-  framerProps?: Variants & { transition?: object };
+  // framer-motion motion-props bag — initial/animate/exit/transition.
+  // Kept loose because the exact union (`MotionProps`) drags too many
+  // generics for a default value to satisfy strict mode.
+  framerProps?: Record<string, unknown>;
   className?: string;
 }) {
   const [index, setIndex] = React.useState(0);
